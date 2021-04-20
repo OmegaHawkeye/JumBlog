@@ -18,7 +18,7 @@ class UserRegisterForm(UserCreationForm):
 
         for fieldname in ['username','email','password1','password2']:
             self.fields[fieldname].help_text = None
-            self.fields[fieldname].label = ""
+            # self.fields[fieldname].label = ""
 
     class Meta:
         model = User
