@@ -1,18 +1,11 @@
-from .forms import SignUpForm, UserRegisterForm
+from .forms import UserRegisterForm
 from django.shortcuts import redirect, render
-from django.contrib.messages.views import SuccessMessageMixin
-from django.urls import reverse_lazy
-from django.views.generic import CreateView
 from django.contrib import messages
 from django_email_verification import send_email
 from django.contrib.auth.models import User
+from .decorators import unauthenticated_user
 
-class SignUpView(SuccessMessageMixin, CreateView):
-  template_name = 'account/register.html'
-  success_url = reverse_lazy('login')
-  form_class = SignUpForm
-  success_message = "Your profile was created successfully"
-
+@unauthenticated_user
 def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
