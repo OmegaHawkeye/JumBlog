@@ -17,7 +17,8 @@ def register(request):
             user.is_active = False
             send_email(user)
             messages.success(
-                request, f'Your account has been created! Please go into your mail and confirm your account to login')
+                request, f'''Your account has been created! 
+                Please go into your mail and confirm your account to login''')
             return redirect('login')
     else:
         form = UserRegisterForm()
