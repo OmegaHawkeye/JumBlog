@@ -10,6 +10,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
+# ALLOWED_HOSTS = ["127.0.0.1", "jumblog.herokuapp.com"]
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -21,6 +23,7 @@ INSTALLED_APPS = [
     'core',
     'users',
     'crispy_forms',
+    'django_email_verification',
     # 'allauth',
     # 'allauth.account',
     # 'allauth.socialaccount',
@@ -103,6 +106,32 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 LOGIN_REDIRECT_URL = "home"
 LOGIN_URL = 'login'
+
+def verified_callback(user):
+    user.is_active = True
+
+EMAIL_VERIFIED_CALLBACK = verified_callback
+EMAIL_FROM_ADDRESS = "jumblog@office.com"
+EMAIL_MAIL_SUBJECT = 'Confirm your email'
+EMAIL_MAIL_HTML = 'email_confirm/mail_body.html'
+EMAIL_MAIL_PLAIN = 'email_confirm/mail_body.txt'
+EMAIL_TOKEN_LIFE = 60 * 60
+EMAIL_PAGE_TEMPLATE = 'email_confirm/confirm_template.html'
+
+if DEBUG:
+    EMAIL_PAGE_DOMAIN = "127.0.0.1:8000"
+else:
+    EMAIL_PAGE_DOMAIN = 'https://jumblog.herokuapp.com'
+    
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+EMAIL_HOST_USER = "chornitzerj@gmail.com"
+
+EMAIL_HOST_PASSWORD  = "Omega020303"
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')

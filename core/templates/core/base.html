@@ -43,24 +43,32 @@
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ml-auto">
+                    {% if user.is_superuser %}
+                    <li class="nav-item mr-3">
+                        <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
+                    </li>
+                    {% endif %}
                     {% if user.is_authenticated %}
-                        <li class="nav-item mr-3">
-                            <a class="nav-link" href="{% url 'article-list' %}">Articles</a>
-                        </li>
-                        <li class="nav-item mr-3">
-                            <a class="nav-link" href="{% url 'logout' %}">Logout</a>
-                        </li>
+                    <li class="nav-item mr-3">
+                        <a class="nav-link" href="{% url 'article-list' %}">Articles</a>
+                    </li>
+                    <li class="nav-item mr-3">
+                        <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                    </li>
                     {% else %}
-                        <li class="nav-item mr-3">
-                            <a class="nav-link" href="{% url 'login' %}">Log in</a>
-                        </li>
-                        <li class="nav-item mr-3">
-                            <a class="nav-link" href="{% url 'logout' %}">Create account</a>
-                        </li>
+                    <li class="nav-item mr-3">
+                        <a class="nav-link" href="{% url 'login' %}">Log in</a>
+                    </li>
+                    <li class="nav-item mr-3">
+                        <a class="nav-link" href="{% url 'register' %}">Create account</a>
+                    </li>
                     {% endif %}
                 </ul>
             </div>
         </nav>
+    </div>
+
+    <div class="container-fluid">
         {% if messages %}
             {% for message in messages %}
                 <div class="alert alert-{{ message.tags }}">{{ message }}</div>
@@ -68,6 +76,7 @@
         {% endif %}
         {% block content %}{% endblock content %}
     </div>
+
 </body>
 
 <!-- Bootstrap/Popper/Jquery CSS -->

@@ -1,4 +1,6 @@
 {% load static %}
+{% block title %}Login{% endblock title %}
+{% load crispy_forms_tags %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -26,7 +28,7 @@
             <div class="alert alert-{{ message.tags }}">{{ message }}</div>
         {% endfor %}
     {% endif %}
-    <div class="form-body" class="container-fluid">
+    <div class="container-fluid" class="form-body">
         <div class="row">
             <div class="img-holder">
                 <div class="bg"></div>
@@ -45,9 +47,10 @@
                         </div>
                         <form method="POST">
                             {% csrf_token %}
-                            <input class="form-control" type="text" name="username" placeholder="E-mail Address"
+                            {{ form|crispy }}
+                            <!-- <input class="form-control" type="text" name="username" placeholder="E-mail Address"
                                 required>
-                            <input class="form-control" type="password" name="password" placeholder="Password" required>
+                            <input class="form-control" type="password" name="password" placeholder="Password" required> -->
                             <div class="form-button">
                                 <button id="submit" type="submit" class="ibtn">Login</button>
                             </div>
