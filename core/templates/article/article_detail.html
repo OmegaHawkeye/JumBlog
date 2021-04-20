@@ -18,7 +18,7 @@
         <p class="text-secondary ">{{ object.created_at|date:"d.F.Y" }}</p>
     </div>
     <hr>
-    <p>{{object.content}}</p>
+    <p>{{ object.content|safe }}</p>
     {% if object.author == user %}
         <a class="btn btn-secondary btn-sm mr-2" href="{% url 'article-update' object.id %}"><i class="fas fa-edit"></i>Edit</a>
         <a class="btn btn-danger btn-sm" href="{% url 'article-delete' object.id %}"><i class="fa fa-trash-alt"> Delete</i></a>

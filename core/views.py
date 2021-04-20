@@ -17,8 +17,7 @@ def home(request):
     triple = Article.objects.all()[1:4]
     return render(request,"core/home.html",{"first":first,"last":last,"triple":triple})
 
-
-class ArticleListView(ListView,LoginRequiredMixin):
+class ArticleListView(LoginRequiredMixin,ListView):
     model = Article
     template_name = 'article/article_list.html'
     context_object_name = 'articles'
@@ -29,7 +28,6 @@ class ArticleDetailView(LoginRequiredMixin, DetailView):
     model = Article
     template_name = "article/article_detail.html"
 
-
 class ArticleCreateView(LoginRequiredMixin, CreateView):
     model = Article
     template_name = "article/article_create.html"
@@ -39,7 +37,6 @@ class ArticleCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
-
 
 class ArticleUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Article
@@ -56,7 +53,6 @@ class ArticleUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         if self.request.user == article.author:
             return True
         return False
-
 
 class ArticleDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Article
