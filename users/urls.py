@@ -4,6 +4,7 @@ from django.contrib.auth.views import *
 
 
 urlpatterns = [
+    # path("register/",SignUpView.as_view(),name="register"),
     path("register/",register,name="register"),
     path('login/', LoginView.as_view(template_name='account/login.html',
                                      redirect_authenticated_user=True), name='login'),
