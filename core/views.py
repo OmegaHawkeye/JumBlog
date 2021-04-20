@@ -12,7 +12,10 @@ from .models import Article
 
 
 def home(request):
-    return render(request,"core/home.html")
+    first = Article.objects.first()
+    last = Article.objects.last()
+    triple = Article.objects.all()[1:4]
+    return render(request,"core/home.html",{"first":first,"last":last,"triple":triple})
 
 
 class ArticleListView(ListView,LoginRequiredMixin):
@@ -30,7 +33,7 @@ class ArticleDetailView(LoginRequiredMixin, DetailView):
 class ArticleCreateView(LoginRequiredMixin, CreateView):
     model = Article
     template_name = "article/article_create.html"
-    fields = ['title','content']
+    fields = ['title','content','image_url']
     success_url = "/articles/"
 
     def form_valid(self, form):
@@ -40,7 +43,7 @@ class ArticleCreateView(LoginRequiredMixin, CreateView):
 
 class ArticleUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Article
-    fields = ['title','content']
+    fields = ['title','content','image_url']
     template_name = "article/article_update.html"
     success_url = '/articles/'
 

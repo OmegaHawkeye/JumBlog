@@ -24,12 +24,12 @@ INSTALLED_APPS = [
     'users',
     'crispy_forms',
     'django_email_verification',
-    # 'allauth',
-    # 'allauth.account',
-    # 'allauth.socialaccount',
-    # 'allauth.socialaccount.providers.github',
-    # 'allauth.socialaccount.providers.google',
-    # 'allauth.socialaccount.providers.twitter',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.linkedin',
     'debug_toolbar',
     'ckeditor',
 ]
@@ -106,12 +106,13 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 LOGIN_REDIRECT_URL = "home"
 LOGIN_URL = 'login'
+# LOGOUT_REDIRECT_URL = "home"
 
 def verified_callback(user):
     user.is_active = True
 
 EMAIL_VERIFIED_CALLBACK = verified_callback
-EMAIL_FROM_ADDRESS = "jumblog@office.com"
+EMAIL_FROM_ADDRESS = "jumblogoffice@gmail.com"
 EMAIL_MAIL_SUBJECT = 'Confirm your email'
 EMAIL_MAIL_HTML = 'email_confirm/mail_body.html'
 EMAIL_MAIL_PLAIN = 'email_confirm/mail_body.txt'
@@ -129,12 +130,14 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
-EMAIL_HOST_USER = "chornitzerj@gmail.com"
+EMAIL_HOST_USER = "jumblogoffice@gmail.com"
 
-EMAIL_HOST_PASSWORD  = "Omega020303"
+EMAIL_HOST_PASSWORD  = "%rJSjN#96xuF#y^pRv85*jNkF34m"
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
