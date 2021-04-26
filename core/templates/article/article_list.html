@@ -13,13 +13,19 @@
         <div class="card-body">
           <h3 class="card-title font-weight-bold">{{article.title}}</h3>
           <p class="card-text">
-            {{article.content|safe}}
+            {{article.content|slice:":150"|safe}}
           </p>
           <p class="card-text">
             <small class="text-dark">Posted at {{ article.created_at|date:"d.F.Y" }}</small>
           </p>
+          <p class="text-muted">Needed XP: {{ article.needed_xp }}</p>
+
+          {% if request.user.profile.xp >= article.needed_xp %}
           <a href="{% url 'article-detail' article.id %}"
             class="btn btn-link float-right text-dark nav-link font-weight-bold">Read more</a>
+          {% else %}
+          <a href="#" class="btn btn-link float-right text-dark nav-link font-weight-bold">Get More XP</a>
+          {% endif %}
         </div>
       </div>
       <div class="col-md-4">

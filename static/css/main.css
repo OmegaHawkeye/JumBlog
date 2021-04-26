@@ -56,7 +56,6 @@ h6 {
   background-color: #230A5F;
   color: white;
 }
-/*# sourceMappingURL=main.css.map */
 
 .content-section{
   width:80%;
@@ -65,4 +64,12 @@ h6 {
   border: 1px solid #dddddd;
   border-radius: 3px;
   margin:20px auto;
+}
+
+.box {
+  width: 500px;
+  /* position:relative;
+  left:15rem; */
+  margin: 4rem auto;
+  height: auto;
 }

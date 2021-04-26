@@ -9,6 +9,7 @@
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
     -moz-osx-font-smoothing: grayscale;
+    overflow:hidden;
 }
 
 html, body {
@@ -16,7 +17,7 @@ html, body {
 }
 
 .form-body {
-    background-color: #6B46C1;
+    /* background-color: #6B46C1; */
     height: 100%;
 }
 
@@ -27,7 +28,11 @@ html, body {
     height: 100%;
 }
 
-
+/* .box {
+    width: auto;
+    margin: 4rem auto;
+    height: auto;
+  } */
 
 .preview-body .web-title {
     font-size: 30px;

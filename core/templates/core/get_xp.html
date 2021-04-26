@@ -1,0 +1,66 @@
+{% extends "core/base.html" %}
+
+{% block title %}Home{% endblock title %}
+
+
+{% block content %}
+
+<div id="countdown" class="text-center"></div>
+
+<div class="text-center">
+    <button class="btn btn-primary my-3" id="start-btn">Start</button>
+</div>
+<div class="article-section mt-4">
+    <div class="container">
+        <img src="{{random_article.image_url}}" class="img-fluid">
+    </div>
+</div>
+</div>
+<div class="container my-4">
+    <h1 class="font-weight-bold">{{ random_article.title }}</h1>
+    <div class="span">
+        <h6 class="font-weight-bold">Written by {{random_article.author}}</h6>
+        <p class="text-secondary ">{{ random_article.created_at|date:"d.F.Y" }}</p>
+    </div>
+    <hr>
+    <p>{{ random_article.content|safe }}</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-more float-right text-light my-3" >Next random Article<i class="fa fa-arrow-right"></i></button>
+    </form>
+</div>
+
+<script>
+    function startTimer(duration, display) {
+        var timer = duration,
+            minutes, seconds,
+            interval = setInterval(updateTimer, 1000);
+        function updateTimer() {
+            minutes = parseInt(timer / 60, 10);
+            seconds = parseInt(timer % 60, 10);
+            localStorage.setItem("maxTime", timer)
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+            display.textContent = minutes + ":" + seconds;
+            if (timer <= 0 || localStorage.getItem("status") === "stopped") {
+                clearInterval(interval)
+                display.textContent = "Time's up";
+                localStorage.setItem("status","stopped")
+            } else {
+                --timer;
+            }
+        }
+    }
+
+    $( document ).ready(() => { 
+        localStorage.getItem("status") === "started" ? startTimer(localStorage.getItem("maxTime"),display) : localStorage.setItem("status","stopped")
+    })
+    var maxTime = 600,
+        display = document.querySelector('#countdown');
+    localStorage.getItem("status") === "started" ? $("#start-btn").attr("disabled",true) : $("#start-btn").attr("disabled",false)
+
+    $("#start-btn").on("click", () => { localStorage.setItem("status","started")});
+    
+</script>
+
+{% endblock %}

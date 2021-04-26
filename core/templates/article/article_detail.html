@@ -7,21 +7,24 @@
 
 <div class="article-section mt-4">
     <div class="container">
-        <img src="https://images.unsplash.com/photo-1588774210246-a1dc467758df?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1867&q=80"
+        <img src="{{article.image_url}}"
             class="img-fluid">
+        </div>
     </div>
 </div>
-<div class="container mt-4">
-    <h1 class="font-weight-bold">{{ object.title }}</h1>
+<div class="container my-4">
+    <h1 class="font-weight-bold">{{ article.title }}</h1>
     <div class="span">
-        <h6 class="font-weight-bold">Written by {{object.author}}</h6>
-        <p class="text-secondary ">{{ object.created_at|date:"d.F.Y" }}</p>
+        <h6 class="font-weight-bold">Written by {{article.author}}</h6>
+        <p class="text-secondary ">{{ article.created_at|date:"d.F.Y" }}</p>
     </div>
     <hr>
-    <p>{{ object.content|safe }}</p>
-    {% if object.author == user %}
-        <a class="btn btn-secondary btn-sm mr-2" href="{% url 'article-update' object.id %}"><i class="fas fa-edit"></i>Edit</a>
-        <a class="btn btn-danger btn-sm" href="{% url 'article-delete' object.id %}"><i class="fa fa-trash-alt"> Delete</i></a>
+    <p>{{ article.content|safe }}</p>
+    
+    {% if article.author == user %}
+        <a class="btn btn-secondary btn-sm mr-2" href="{% url 'article-update' article.id %}"><i class="fas fa-edit"></i>Edit</a>
+        <a class="btn btn-danger btn-sm" href="{% url 'article-delete' article.id %}"><i class="fa fa-trash-alt"> Delete</i></a>
     {% endif %}
 </div>
+
 {% endblock content %}

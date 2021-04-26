@@ -3,6 +3,9 @@ from .views import *
 urlpatterns = [
     path("",home,name="home"),
     
+    path("get-xp/",get_xp,name="get-xp"),
+    # path("random-article/detail",RandomArticleDetailView.as_view(),name="random-article-detail"),
+
     path("articles/",ArticleListView.as_view(),name="article-list"),
     path("article/create/",ArticleCreateView.as_view(),name="article-create"),
     path("article/<int:pk>/detail/",ArticleDetailView.as_view(),name="article-detail"),
