@@ -1,5 +1,7 @@
-
-from django.shortcuts import render
+# from django.contrib.auth.models import User
+from django.views.generic.edit import FormMixin
+# from django.contrib.messages.api import success
+from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import (
     ListView,
@@ -8,49 +10,106 @@ from django.views.generic import (
     UpdateView,
     DeleteView
 )
-# from gtts import gTTS
-from django.utils.safestring import mark_safe,SafeString
-from .models import Article
-from users.models import Profile
-import random
 
-def get_xp(request):
-    first_article_id = Article.objects.first().id
-    last_article_id = Article.objects.last().id
-    random_Article_id = random.randrange(first_article_id,last_article_id)
-    random_Article = Article.objects.get(id=random_Article_id)
-    if request.method == 'POST':
-        curr_prof = Profile.objects.get(user=request.user)
-        curr_prof.xp += random_Article.gained_xp
-        curr_prof.save()
-        # text = random_Article.content
-        # save_text = mark_safe(text)
-        # my_obj = gTTS(text=text,lang="en",slow=False)
-        # my_obj.save("speech.mp3")
-    return render(request,"core/get_xp.html",{"random_article":random_Article,"user_xp":request.user.profile.xp})
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+from .models import Article
+# import random
+from django.db.models import Q
+
+def LikeView(request,pk):
+    article = get_object_or_404(Article,id=request.POST.get("article_id"))
+    if article.liked.filter(id=request.user.id).exists():
+        article.liked.remove(request.user)
+        liked=False
+    else:
+        article.liked.add(request.user)
+        liked=True
+    return HttpResponseRedirect(reverse("article-detail",args=[str(pk)]))
+
+
+def BookmarkView(request,pk):
+    article = get_object_or_404(Article,id=request.POST.get("article_id"))
+    if article.bookmarked == True:
+        article.bookmarked = False
+        article.save()
+        bookmarked = False
+    else:
+        article.bookmarked = True
+        article.save()
+        bookmarked = True
+    return HttpResponseRedirect(reverse("article-detail",args=[str(pk)]))
 
 def home(request):
+    # first_article_id = Article.objects.first().id
+    # last_article_id = Article.objects.last().id
+    # random_Article_id = random.randrange(first_article_id,last_article_id)
     first = Article.objects.first()
     last = Article.objects.last()
     triple = Article.objects.all()[1:4]
     return render(request,"core/home.html",{"first":first,"last":last,"triple":triple})
 
+class BookmarkedArticleListView(LoginRequiredMixin,ListView):
+    model = Article
+    template_name = 'article/bookmarked_article_list.html'
+    context_object_name = 'articles'
+    ordering = ['-created_at']
+    paginate_by = 5
+
+    def get_queryset(self):
+        bookmarked = Article.objects.filter(bookmarked=True)
+        return Article.objects.filter(bookmarked__in=bookmarked)
+
 class ArticleListView(LoginRequiredMixin,ListView):
     model = Article
     template_name = 'article/article_list.html'
     context_object_name = 'articles'
-    ordering = ['-needed_xp']
-    paginate_by = 5
+    ordering = ['-created_at']
+    paginate_by = 20
 
-class ArticleDetailView(LoginRequiredMixin, DetailView):
+class ArticleDetailView(LoginRequiredMixin,DetailView): #FormMixin
     model = Article
     template_name = "article/article_detail.html"
     context_object_name = "article"
+    fields = ("title","subtitle","content","image","categorie","tags","bookmarked","liked")
+
+    def get_success_url(self):
+        return reverse('article-detail', kwargs={'pk': self.object.id})
+
+    # def post(self, request, *args, **kwargs):
+    #     self.object = self.get_object()
+    #     form = self.get_form()
+    #     if form.is_valid():
+    #         return self.form_valid(form)
+    #     else:
+    #         return self.form_invalid(form)
+
+    # def form_valid(self, form):
+    #     article = self.get_object()
+    #     myform = form.save(commit=False)
+    #     myform.article = article
+    #     myform.author = article.author
+    #     form.save()
+    #     return super(ArticleDetailView, self).form_valid(form)
+
+    def get_context_data(self, *args,**kwargs):
+        context = super(ArticleDetailView,self).get_context_data(**kwargs)
+        article = get_object_or_404(Article,id=self.kwargs["pk"])
+        liked = False
+        if article.liked.filter(id=self.request.user.id).exists():
+            liked = True
+        bookmarked = False
+        if article.bookmarked == True:
+            bookmarked = True
+        context["liked"] = liked
+        context["bookmarked"] = bookmarked
+        return context
+
 
 class ArticleCreateView(LoginRequiredMixin, CreateView):
     model = Article
     template_name = "article/article_create.html"
-    fields = ['title','content','needed_xp','gained_xp','image_url']
+    fields = ['image','title','subtitle','content','categorie','tags']
     success_url = "/articles/"
 
     def form_valid(self, form):
@@ -59,7 +118,7 @@ class ArticleCreateView(LoginRequiredMixin, CreateView):
 
 class ArticleUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Article
-    fields = ['title','content','needed_xp','gained_xp','image_url']
+    fields = ['image','title','subtitle','content','categorie','tags']
     template_name = "article/article_update.html"
     success_url = '/articles/'
 
@@ -84,4 +143,29 @@ class ArticleDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
             return True
         return False
 
-    
+class SearchResultView(ListView):
+    model = Article
+    template_name = "article/search-info.html"
+
+    def get_queryset(self):
+        query = self.request.GET.get("q")
+        object_list = Article.objects.filter(
+            Q(title__icontains=query) |
+            Q(subtitle__icontains=query) |
+            Q(author__username__icontains=query) |
+            Q(content__icontains=query) |
+            Q(categorie__name__icontains=query) |
+            Q(tags__name__icontains=query)
+        ).distinct()
+        return object_list
+
+
+class CreateArticle(LoginRequiredMixin,CreateView):
+    model = Article
+    template_name = "article/writeArticle.html"
+    fields = ['image','title','subtitle','content','categorie','tags']
+    success_url = "/articles/"
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)

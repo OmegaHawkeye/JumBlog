@@ -45,18 +45,23 @@
             </button>
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav ml-auto">
-                    {% if user.is_superuser %}
-                    <li class="nav-item mr-3">
-                        <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
-                    </li>
-                    {% endif %}
+                <ul class="navbar-nav ml-auto mt-2">
                     {% if user.is_authenticated %}
+                    <form style="width:400px;"class="mx-lg-3" action="{% url 'search' %}" method="GET">
+                        <div class="form-group">
+                            <input class="form-control" type="search" placeholder="Search" name="q" autocomplete="off" aria-label="Search">
+                        </div>
+                    </form>
+                    {% if user.is_superuser %}
+                        <li class="nav-item ml-lg-5 mr-3">
+                            <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
+                        </li>
+                    {% endif %}
                     <li class="nav-item mr-3">
-                        <a class="nav-link" href="{% url 'article-list' %}">Articles</a>
+                        <a class="nav-link" href="{% url 'article-create' %}">Write a Blog</a>
                     </li>
                     <li class="nav-item mr-3">
-                        <a class="nav-link" href="{% url 'get-xp' %}">Get XP</a>
+                        <a class="nav-link" href="{% url 'bookmarked-article-list' %}">Reading List</a>
                     </li>
                     <li class="nav-item mr-3">
                         <a class="nav-link" href="{% url 'logout' %}">Logout</a>

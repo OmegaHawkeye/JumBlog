@@ -10,6 +10,14 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
+MANAGERS = (
+    ('Julian Chornitzer', 'chornitzerj@gmail.com'),
+)
+
+ADMINS = (
+    ("Julian Chornitzer", "chornitzerj@gmail.com")
+)
+
 # ALLOWED_HOSTS = ["127.0.0.1", "jumblog.herokuapp.com"]
 
 INSTALLED_APPS = [
@@ -31,8 +39,26 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.linkedin',
     'debug_toolbar',
-    'ckeditor',
+    # 'ckeditor',
+    'martor',
+    'taggit',
+    'django_comments_xtd',
+    'django_comments',
+    'mptt',
 ]
+
+COMMENTS_APP = 'django_comments_xtd'
+COMMENTS_XTD_MAX_THREAD_LEVEL = 2
+COMMENTS_XTD_CONFIRM_EMAIL = False
+
+COMMENTS_XTD_APP_MODEL_OPTIONS = {
+    'default': {
+        'allow_flagging': False,
+        'allow_feedback': True,
+        'show_feedback': True,
+        'who_can_post': 'all'  # Valid values: 'all', users'
+    }
+}
 
 SITE_ID = 1
 
@@ -141,3 +167,28 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+MARTOR_THEME = 'bootstrap'
+
+MARTOR_ENABLE_CONFIGS = {
+    'emoji': 'true',        # to enable/disable emoji icons.
+    'imgur': 'true',        # to enable/disable imgur/custom uploader.
+    'mention': 'false',     # to enable/disable mention
+    'jquery': 'true',       # to include/revoke jquery (require for admin default django)
+    'living': 'false',      # to enable/disable live updates in preview
+    'spellcheck': 'false',  # to enable/disable spellcheck in form textareas
+    'hljs': 'true',         # to enable/disable hljs highlighting in preview
+}
+
+MARTOR_TOOLBAR_BUTTONS = [
+    'bold', 'italic', 'horizontal', 'heading', 'pre-code',
+    'blockquote', 'unordered-list', 'ordered-list',
+    'link', 'image-link', 'image-upload', 'emoji',
+    'direct-mention', 'toggle-maximize', 'help'
+]
+
+MARTOR_ENABLE_LABEL = True
+
+MARTOR_MARKDOWN_BASE_MENTION_URL = 'http://jumblog.herokuapp.com/' 
+
+# CSRF_COOKIE_HTTPONLY = False

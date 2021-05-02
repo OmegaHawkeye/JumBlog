@@ -1,15 +1,23 @@
-{% extends "core/base.html" %}
+{% extends "base.html" %}
+{% load martortags %}
+{% load mptt_tags %}
+{% load crispy_forms_tags %}
+{% load comments %}
+{% load comments_xtd %}
+{% load martortags %}
 
 {% block title %} Detail Page of an Article{% endblock title %}
 
+{% block extrahead %}
+  {{form.media}}
+{% endblock extrahead %}
 
 {% block content %}
 
 <div class="article-section mt-4">
     <div class="container">
-        <img src="{{article.image_url}}"
+        <img src="{{article.image.url}}"
             class="img-fluid">
-        </div>
     </div>
 </div>
 <div class="container my-4">
@@ -17,14 +25,53 @@
     <div class="span">
         <h6 class="font-weight-bold">Written by {{article.author}}</h6>
         <p class="text-secondary ">{{ article.created_at|date:"d.F.Y" }}</p>
+        {% if article.author == user %}
+            <a class="btn btn-secondary btn-sm mr-2" href="{% url 'article-update' article.id %}"><i class="fas fa-edit"></i>Edit</a>
+            <a class="btn btn-danger btn-sm" href="{% url 'article-delete' article.id %}"><i class="fa fa-trash-alt"> Delete</i></a>
+        {% endif %}
     </div>
     <hr>
-    <p>{{ article.content|safe }}</p>
+    <p>{{ article.content|safe_markdown }}</p>
     
-    {% if article.author == user %}
-        <a class="btn btn-secondary btn-sm mr-2" href="{% url 'article-update' article.id %}"><i class="fas fa-edit"></i>Edit</a>
-        <a class="btn btn-danger btn-sm" href="{% url 'article-delete' article.id %}"><i class="fa fa-trash-alt"> Delete</i></a>
+    <form action="{% url 'like-article' article.id %}" method="post">
+        {% csrf_token %}
+        {% if liked %}
+            <button type="submit" name="article_id" value="{{article.id}}" class="btn btn-outline-primary my-3"><i class="fas fa-thumbs-down"></i></button>
+        {% else %}
+            <button type="submit" name="article_id" value="{{article.id}}" class="btn btn-outline-primary my-3"><i class="fas fa-thumbs-up"></i></button>
+        {% endif %}
+    </form>
+
+    <form action = "{% url 'bookmark-article' article.id %}" method="post">
+        {% csrf_token %}
+        {% if bookmarked %}
+            <button type="submit" name="article_id" value="{{article.id}}" class="btn btn-outline-primary my-3"><i class="far fa-bookmark"></i></button>
+        {% else %}
+            <button type="submit" name="article_id" value="{{article.id}}" class="btn btn-outline-primary my-3"><i class="fas fa-bookmark"></i></button>
+        {% endif %}
+    </form>
+
+    {% get_comment_count for object as comment_count %}
+    <div class="py-4 text-center">
+        <a href="{% url 'article-list' %}">Back to the post list</a>
+        &nbsp;&sdot;&nbsp;
+        {{ comment_count }} comment{{ comment_count|pluralize }}
+        ha{{ comment_count|pluralize:"s,ve" }} been posted.
+    </div>
+    {% if comment_count %}
+     <ul class="media-list">
+        {% render_xtdcomment_tree for object allow_flagging allow_feedback %}
+    </ul>
     {% endif %}
+    {% comment %} {% if object.allow_comments %} {% endcomment %}
+    <div class="card card-block mb-5">
+        <div class="card-body">
+            <h4 class="card-title text-center pb-3">Post your comment</h4>
+            {% render_comment_form for object %}
+        </div>
+    </div>
+    {% comment %} {% endif %}      {% endcomment %}
+
 </div>
 
 {% endblock content %}

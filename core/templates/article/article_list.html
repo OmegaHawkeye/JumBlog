@@ -1,4 +1,5 @@
-{% extends "core/base.html" %} 
+{% extends "base.html" %}
+{% load martortags %}
 
 {% block title %}List all Articles{% endblock title %}
 
@@ -13,30 +14,50 @@
         <div class="card-body">
           <h3 class="card-title font-weight-bold">{{article.title}}</h3>
           <p class="card-text">
-            {{article.content|slice:":150"|safe}}
+            {{article.content|safe_markdown|slice:":150"}}
           </p>
           <p class="card-text">
             <small class="text-dark">Posted at {{ article.created_at|date:"d.F.Y" }}</small>
           </p>
-          <p class="text-muted">Needed XP: {{ article.needed_xp }}</p>
-
-          {% if request.user.profile.xp >= article.needed_xp %}
-          <a href="{% url 'article-detail' article.id %}"
+          {% for tag in article.tags.all %}
+            <span class="badge badge-pill badge-primary">{{tag}}</span>
+          {% endfor %} 
+          <a href="{{ article.get_absolute_url }}"
             class="btn btn-link float-right text-dark nav-link font-weight-bold">Read more</a>
-          {% else %}
-          <a href="#" class="btn btn-link float-right text-dark nav-link font-weight-bold">Get More XP</a>
-          {% endif %}
         </div>
       </div>
       <div class="col-md-4">
         <img
-          src="{{ article.image_url }}"
+          src="{{ article.image.url }}"
           class="card-img" alt="..." />
       </div>
     </div>
   </div>
   {% endfor %}
   <a class="btn btn-more float-right text-light my-3" href="{% url 'article-create' %}"><i class="fa fa-plus-square mx-2"></i>Create Article</a>
-
 </div>
+
+
+{% if is_paginated %}
+
+  {% if page_obj.has_previous %}
+    <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+    <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+  {% endif %}
+
+  {% for num in page_obj.paginator.page_range %}
+    {% if page_obj.number == num %}
+      <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+      <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+    {% endif %}
+  {% endfor %}
+
+  {% if page_obj.has_next %}
+    <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>
+    <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+  {% endif %}
+
+{% endif %}
+
 {% endblock content %}

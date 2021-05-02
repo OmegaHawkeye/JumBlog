@@ -1,4 +1,12 @@
 from django.contrib import admin
-from .models import Article
+from django.db import models
+from .models import Article,Category
+from martor.widgets import AdminMartorWidget
 
-admin.site.register(Article)
+
+class ArticleAdmin(admin.ModelAdmin):
+    formfield_overrides = {
+        models.TextField: {'widget': AdminMartorWidget},
+    }
+admin.site.register(Article,ArticleAdmin)
+admin.site.register(Category)
