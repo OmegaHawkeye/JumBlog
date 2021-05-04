@@ -8,17 +8,15 @@ SECRET_KEY = 'm5zywpxsl+tu8$2d(u4_utr+v%)nvii94fc+hj2ixnfr4uwv0w'
 
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+# ALLOWED_HOSTS = ["*"]
 
-MANAGERS = (
-    ('Julian Chornitzer', 'chornitzerj@gmail.com'),
-)
+# MANAGERS = (
+#     ('Julian Chornitzer', 'chornitzerj@gmail.com'),
+# )
 
-ADMINS = (
-    ("Julian Chornitzer", "chornitzerj@gmail.com")
-)
+ADMINS = [("Julian Chornitzer","chornitzerj@gmail.com")]
 
-# ALLOWED_HOSTS = ["127.0.0.1", "jumblog.herokuapp.com"]
+ALLOWED_HOSTS = ["127.0.0.1", "jumblog.herokuapp.com"]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -44,21 +42,8 @@ INSTALLED_APPS = [
     'taggit',
     'django_comments_xtd',
     'django_comments',
-    'mptt',
 ]
 
-COMMENTS_APP = 'django_comments_xtd'
-COMMENTS_XTD_MAX_THREAD_LEVEL = 2
-COMMENTS_XTD_CONFIRM_EMAIL = False
-
-COMMENTS_XTD_APP_MODEL_OPTIONS = {
-    'default': {
-        'allow_flagging': False,
-        'allow_feedback': True,
-        'show_feedback': True,
-        'who_can_post': 'all'  # Valid values: 'all', users'
-    }
-}
 
 SITE_ID = 1
 
@@ -160,11 +145,31 @@ EMAIL_HOST_USER = "jumblogoffice@gmail.com"
 
 EMAIL_HOST_PASSWORD  = "%rJSjN#96xuF#y^pRv85*jNkF34m"
 
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATIC_URL = '/static/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
+AWS_STORAGE_BUCKET_NAME = "jumblog"
+
+AWS_SECRET_ACCESS_KEY = "YFmO2/IcohZkd++DraMMqV4qy1uGGllZ/DzIouo9"
+
+AWS_ACCESS_KEY_ID = "AKIAYBOUMUXQFXEAFISG"
+
+AWS_URL = "https://jumblog.s3.amazonaws.com/"
+
+AWS_S3_REGION_NAME = 'eu-central-1'
+
+AWS_S3_SIGNATURE_VERSION = 's3v4'
+
+AWS_DEFAULT_ACL = None
+
+if DEBUG:
+    STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    STATIC_URL = '/static/'
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+    MEDIA_URL = '/media/'
+else:       
+    STATIC_URL = AWS_URL + '/static/'
+    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    MEDIA_URL = AWS_URL + '/media/'
+    DEFAULT_FILE_STORAGE = 'django_project.storage_backends.MediaStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -192,3 +197,16 @@ MARTOR_ENABLE_LABEL = True
 MARTOR_MARKDOWN_BASE_MENTION_URL = 'http://jumblog.herokuapp.com/' 
 
 # CSRF_COOKIE_HTTPONLY = False
+
+COMMENTS_APP = 'django_comments_xtd'
+COMMENTS_XTD_MAX_THREAD_LEVEL = 2
+COMMENTS_XTD_CONFIRM_EMAIL = True
+
+COMMENTS_XTD_APP_MODEL_OPTIONS = {
+    'default': {
+        'allow_flagging': True,
+        'allow_feedback': True,
+        'show_feedback': True,
+        'who_can_post': 'users'  # Valid values: 'all', users'
+    }
+}

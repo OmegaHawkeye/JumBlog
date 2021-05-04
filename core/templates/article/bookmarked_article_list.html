@@ -24,15 +24,15 @@
 
 <div class="container mt-4">
   <div class="row">
-  {% for article in articles %}
+  {% for bookmarked_article in bookmarked_articles %}
     <div class="col-md-4">
       <div class="card shadow-sm">
-        <img src="{{ article.image.url }}" class="card-img-top" alt="..." />
+        <img src="{{ bookmarked_article.image.url }}" class="card-img-top" alt="..." />
         <div class="card-body">
-          <h4 class="card-title font-weight-bold">{{article.title}}</h4>
-          <p class="card-text">{{article.content|slice:":150"|safe_markdown}}</p>
+          <h4 class="card-title font-weight-bold">{{bookmarked_article.title}}</h4>
+          <p class="card-text">{{bookmarked_article.content|slice:":150"|safe_markdown}}</p>
           <a
-            href="{{ article.get_absolute_url }}"
+            href="{{ bookmarked_article.get_absolute_url }}"
             class="btn btn-link float-right text-dark font-weight-bold"
             >Read more</a
           >

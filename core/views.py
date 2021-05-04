@@ -16,6 +16,22 @@ from django.urls import reverse
 from .models import Article
 # import random
 from django.db.models import Q
+from gtts.tts import gTTS
+from django.utils.safestring import SafeText
+
+def handler404(request,exception):
+    return render(request, 'error/404.html', {"exception":exception,"request":request}, status=404)
+
+
+def gTTSView(request):
+    lang = "en"
+    if request.method == "POST":
+        first = Article.objects.first()
+        text = SafeText(first.content)
+        object = gTTS(text=text,lang=lang,slow=False)
+        object.save("static/audio/object.mp3")
+    return render(request,"core/gtts.html",{"article":Article.objects.first()})
+
 
 def LikeView(request,pk):
     article = get_object_or_404(Article,id=request.POST.get("article_id"))
@@ -52,13 +68,12 @@ def home(request):
 class BookmarkedArticleListView(LoginRequiredMixin,ListView):
     model = Article
     template_name = 'article/bookmarked_article_list.html'
-    context_object_name = 'articles'
+    context_object_name = 'bookmarked_articles'
     ordering = ['-created_at']
     paginate_by = 5
 
     def get_queryset(self):
-        bookmarked = Article.objects.filter(bookmarked=True)
-        return Article.objects.filter(bookmarked__in=bookmarked)
+        return Article.objects.filter(bookmarked=True)
 
 class ArticleListView(LoginRequiredMixin,ListView):
     model = Article
@@ -71,10 +86,10 @@ class ArticleDetailView(LoginRequiredMixin,DetailView): #FormMixin
     model = Article
     template_name = "article/article_detail.html"
     context_object_name = "article"
-    fields = ("title","subtitle","content","image","categorie","tags","bookmarked","liked")
+    fields = ("title","subtitle","content","image","tags","bookmarked","liked")
 
-    def get_success_url(self):
-        return reverse('article-detail', kwargs={'pk': self.object.id})
+    # def get_success_url(self):
+    #     return reverse('article-detail', kwargs={'pk': self.id})
 
     # def post(self, request, *args, **kwargs):
     #     self.object = self.get_object()
@@ -105,11 +120,20 @@ class ArticleDetailView(LoginRequiredMixin,DetailView): #FormMixin
         context["bookmarked"] = bookmarked
         return context
 
+class CategoryListView(LoginRequiredMixin,ListView):
+    model = Article
+    template_name = 'article/categorized_article_list.html'
+    context_object_name = 'categorized_articles'
+    ordering = ['-created_at']
+    paginate_by = 5
+
+    def get_queryset(self):
+        return Article.objects.filter(category=self.kwargs.get("category"))
 
 class ArticleCreateView(LoginRequiredMixin, CreateView):
     model = Article
     template_name = "article/article_create.html"
-    fields = ['image','title','subtitle','content','categorie','tags']
+    fields = ['image','title','subtitle','content','tags','category',"allow_comments"]
     success_url = "/articles/"
 
     def form_valid(self, form):
@@ -118,9 +142,12 @@ class ArticleCreateView(LoginRequiredMixin, CreateView):
 
 class ArticleUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Article
-    fields = ['image','title','subtitle','content','categorie','tags']
+    fields = ['image','title','subtitle','content','tags','category',"allow_comments"]
     template_name = "article/article_update.html"
-    success_url = '/articles/'
+    # success_url = '/articles/'
+
+    def get_success_url(self):
+        return reverse('article-detail', kwargs={'pk': self.object.id})
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -169,3 +196,5 @@ class CreateArticle(LoginRequiredMixin,CreateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
+
+

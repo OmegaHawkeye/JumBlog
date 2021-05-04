@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% load martortags %}
-{% load mptt_tags %}
 {% load crispy_forms_tags %}
 {% load comments %}
 {% load comments_xtd %}
@@ -33,25 +32,27 @@
     <hr>
     <p>{{ article.content|safe_markdown }}</p>
     
+<div class="d-flex flex-row">
     <form action="{% url 'like-article' article.id %}" method="post">
         {% csrf_token %}
         {% if liked %}
-            <button type="submit" name="article_id" value="{{article.id}}" class="btn btn-outline-primary my-3"><i class="fas fa-thumbs-down"></i></button>
+            <button type="submit" name="article_id" value="{{article.id}}" class="btn btn-outline-primary my-3"><i class="fas fa-heart"></i></button>
         {% else %}
-            <button type="submit" name="article_id" value="{{article.id}}" class="btn btn-outline-primary my-3"><i class="fas fa-thumbs-up"></i></button>
+            <button type="submit" name="article_id" value="{{article.id}}" class="btn btn-outline-primary my-3"><i class="far fa-heart"></i></button>
         {% endif %}
     </form>
-
-    <form action = "{% url 'bookmark-article' article.id %}" method="post">
+    <form action="{% url 'bookmark-article' article.id %}" method="post">
         {% csrf_token %}
         {% if bookmarked %}
-            <button type="submit" name="article_id" value="{{article.id}}" class="btn btn-outline-primary my-3"><i class="far fa-bookmark"></i></button>
+            <button type="submit" name="article_id" value="{{article.id}}" class="btn btn-outline-primary my-3 mx-3"><i class="fas fa-bookmark"></i></button>
         {% else %}
-            <button type="submit" name="article_id" value="{{article.id}}" class="btn btn-outline-primary my-3"><i class="fas fa-bookmark"></i></button>
+            <button type="submit" name="article_id" value="{{article.id}}" class="btn btn-outline-primary my-3 mx-3"><i class="far fa-bookmark"></i></button>
         {% endif %}
     </form>
+</div>
 
-    {% get_comment_count for object as comment_count %}
+{% if article.allow_comments %}
+    {% get_comment_count for article as comment_count %}
     <div class="py-4 text-center">
         <a href="{% url 'article-list' %}">Back to the post list</a>
         &nbsp;&sdot;&nbsp;
@@ -60,17 +61,27 @@
     </div>
     {% if comment_count %}
      <ul class="media-list">
-        {% render_xtdcomment_tree for object allow_flagging allow_feedback %}
+        {% render_xtdcomment_tree for article allow_flagging allow_feedback %}
     </ul>
     {% endif %}
-    {% comment %} {% if object.allow_comments %} {% endcomment %}
+    
     <div class="card card-block mb-5">
         <div class="card-body">
             <h4 class="card-title text-center pb-3">Post your comment</h4>
-            {% render_comment_form for object %}
+            {% render_comment_form for article %}
+            {% comment %} {% get_comment_form for article as form %}
+            <form method="post" action="{% url 'comments-post-comment' %}">
+                {% csrf_token %}
+                {{form|crispy}}
+                <button type="submit" class="btn btn-outline-primary">Comment</button>
+            </form> {% endcomment %}
         </div>
     </div>
-    {% comment %} {% endif %}      {% endcomment %}
+{% else %}
+    <div class="text-center">
+        <span class="text-muted">Comments are disabled. Contact the Author or an Admin for more Information</span>
+    </div>
+{% endif %}     
 
 </div>
 
