@@ -18,7 +18,7 @@ class Article(models.Model):
     author = models.ForeignKey(User,on_delete=models.CASCADE)
     # content = RichTextField()
     content = MartorField()
-    image = models.ImageField()
+    image = models.ImageField(upload_to="article_pics/")
     category = models.CharField(max_length=155,choices=CATEGORY_CHOICES)
     tags = TaggableManager()
     bookmarked= models.BooleanField(default=False)

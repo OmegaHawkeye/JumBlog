@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'taggit',
     'django_comments_xtd',
     'django_comments',
+    'django_extensions',
 ]
 
 

@@ -11,7 +11,6 @@ urlpatterns = [
     path("article/<int:pk>/update/",ArticleUpdateView.as_view(),name="article-update"),
     path("article/<int:pk>/delete/",ArticleDeleteView.as_view(),name="article-delete"),
 
-    path("gtts/",gTTSView,name="gtts"),
     path("bookmark/<int:pk>/",BookmarkView,name="bookmark-article"),
     path("like/<int:pk>/",LikeView,name="like-article"),
     path("create/article/",CreateArticle.as_view(),name="create-article"),

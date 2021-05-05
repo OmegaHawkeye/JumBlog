@@ -1,16 +1,13 @@
-from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
+from .forms import UserRegisterForm, UserUpdateForm,ProfileUpdateForm
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from django_email_verification import send_email
 from django.contrib.auth.models import User
 from .decorators import unauthenticated_user
 from django.contrib.auth.decorators import login_required
-# from django.contrib.auth.mixins import LoginRequiredMixin
-# from django.views.generic import UpdateView
-
 
 @unauthenticated_user
-def register(request):
+def Register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
         if form.is_valid():
@@ -32,14 +29,14 @@ def register(request):
 @login_required
 def Profile(request):
     if request.method == 'POST':
-        # p_form = ProfileUpdateForm(request.POST, instance=request.user.profile)
+        p_form = ProfileUpdateForm(request.POST, instance=request.user.profile)
         u_form = UserUpdateForm(request.POST, instance=request.user)
-        if u_form.is_valid(): # and p_form.is_valid():
+        if u_form.is_valid() and p_form.is_valid():
             u_form.save()
-            # p_form.save()
+            p_form.save()
             messages.success(request, f'Your profile has been updated!')
             return redirect('profile')
     else:
         u_form = UserUpdateForm(instance=request.user)
-        # p_form = ProfileUpdateForm(instance=request.user.profile)
-    return render(request, 'account/profile.html', {'u_form': u_form})
+        p_form = ProfileUpdateForm(instance=request.user.profile)
+    return render(request, 'account/profile.html', {'u_form': u_form,"p_form":p_form})

@@ -36,6 +36,12 @@ h6 {
   background-color: #f7f6f3;
 }
 
+.article-img {
+  height: 65px;
+  width: 65px;
+  margin-right: 16px;
+}
+
 .article-section {
   max-height: 400px;
   background-size: cover;

@@ -80,16 +80,16 @@
     </div>
     {% comment %} {% endif %} {% endcomment %}
     <div class="container-fluid">
-        <div>
-            {% if messages %}
+        {% if messages %}
+            <div>   
                 {% for message in messages %}
                     <div class="alert alert-{{ message.tags }}">{{ message }}</div>
                 {% endfor %}
-            {% endif %}
-        </div>
+            </div>
+        {% endif %}
         {% block content %}{% endblock content %} 
     </div>
-    {% comment %} {% include 'core/footer.html' %} {% endcomment %}
+    {% include 'core/footer.html' %}
 </body>
 
 <!-- Bootstrap/Popper/Jquery CSS -->

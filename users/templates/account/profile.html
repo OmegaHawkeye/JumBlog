@@ -1,13 +1,14 @@
-{% extends "core/base.html" %}
+{% extends "base.html" %}
 {% load crispy_forms_tags %}
 {% block title %}Profile{% endblock title %}
 {% block content %}
+
 <div class="content-section">
   <div class="media">
+    <img class="article-img mt-4" src="{{ user.profile.image.url }}"/>
     <div class="media-body">
       <h2 class="account-heading mt-4">{{ user.username }}</h2>
       <p class="text-secondary">{{ user.email }}</p>
-      <p class="text-secondary">{{ user.profile.xp }}</p>
     </div>
   </div>
   <form method="POST" enctype="multipart/form-data">
@@ -15,7 +16,7 @@
     <fieldset class="form-group">
       <legend class="border-bottom mb-4">Profile Info</legend>
       {{ u_form|crispy }}
-     {% comment %} {{ p_form|crispy }} {% endcomment %}
+      {{ p_form|crispy }}
       <a class="btn btn-outline-primary" href="{% url 'password_change' %}">Change Password</a>
     </fieldset>
     <div class="form-group">

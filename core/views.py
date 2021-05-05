@@ -1,5 +1,5 @@
 # from django.contrib.auth.models import User
-from django.views.generic.edit import FormMixin
+# from django.views.generic.edit import FormMixin
 # from django.contrib.messages.api import success
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -16,22 +16,11 @@ from django.urls import reverse
 from .models import Article
 # import random
 from django.db.models import Q
-from gtts.tts import gTTS
-from django.utils.safestring import SafeText
+# from gtts.tts import gTTS
+# from django.utils.safestring import SafeText
 
 def handler404(request,exception):
     return render(request, 'error/404.html', {"exception":exception,"request":request}, status=404)
-
-
-def gTTSView(request):
-    lang = "en"
-    if request.method == "POST":
-        first = Article.objects.first()
-        text = SafeText(first.content)
-        object = gTTS(text=text,lang=lang,slow=False)
-        object.save("static/audio/object.mp3")
-    return render(request,"core/gtts.html",{"article":Article.objects.first()})
-
 
 def LikeView(request,pk):
     article = get_object_or_404(Article,id=request.POST.get("article_id"))
