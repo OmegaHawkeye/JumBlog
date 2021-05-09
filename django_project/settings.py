@@ -7,7 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'm5zywpxsl+tu8$2d(u4_utr+v%)nvii94fc+hj2ixnfr4uwv0w'
 
-DEBUG = False
+DEBUG = True
 
 # ALLOWED_HOSTS = ['*']
 
@@ -46,8 +46,10 @@ INSTALLED_APPS = [
     'django_comments',
 ]
 
-
-SITE_ID = 1
+if DEBUG:
+    SITE_ID = 1
+else:
+    SITE_ID = 2
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -82,15 +84,24 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'django_project.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
-
-DATABASES['default'] = dj_database_url.config(conn_max_age=600)
-    
+else:
+    DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME':  "d54ia883272jok",
+        'USER':   "mxdhqjnvjbfwlk",
+        'PASSWORD': "aa7e43cec1c3562efa6be039384ee39676ae5d539063390d2ca16198c201e2db",
+        'HOST':  "ec2-34-247-118-233.eu-west-1.compute.amazonaws.com",
+        'PORT': '5432',
+        }   
+    }    
 
 AUTH_PASSWORD_VALIDATORS = [
     {
