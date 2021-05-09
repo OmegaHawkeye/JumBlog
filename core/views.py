@@ -79,31 +79,32 @@ class ArticleListView(LoginRequiredMixin,ListView):
     def get_queryset(self):
         return Article.objects.filter(published=True)
 
+class DraftedArticleListView(LoginRequiredMixin,ListView):
+    model = Article
+    template_name = 'article/drafted_article_list.html'
+    context_object_name = 'articles'
+    ordering = ['-created_at']
+    paginate_by = 20
 
-class ArticleDetailView(LoginRequiredMixin,DetailView): #FormMixin
+    def get_queryset(self):
+        return Article.objects.filter(author=self.request.user,published=False)
+
+class PublishedArticleListView(LoginRequiredMixin,ListView):
+    model = Article
+    template_name = 'article/published_article_list.html'
+    context_object_name = 'articles'
+    ordering = ['-created_at']
+    paginate_by = 20
+
+    def get_queryset(self):
+        return Article.objects.filter(author__username=self.kwargs.get("username"),published=True)
+
+
+class ArticleDetailView(LoginRequiredMixin,DetailView):
     model = Article
     template_name = "article/article_detail.html"
     context_object_name = "article"
-    fields = ("title","subtitle","content","image","tags","category","bookmarked","liked")
-
-    # def get_success_url(self):
-    #     return reverse('article-detail', kwargs={'pk': self.id})
-
-    # def post(self, request, *args, **kwargs):
-    #     self.object = self.get_object()
-    #     form = self.get_form()
-    #     if form.is_valid():
-    #         return self.form_valid(form)
-    #     else:
-    #         return self.form_invalid(form)
-
-    # def form_valid(self, form):
-    #     article = self.get_object()
-    #     myform = form.save(commit=False)
-    #     myform.article = article
-    #     myform.author = article.author
-    #     form.save()
-    #     return super(ArticleDetailView, self).form_valid(form)
+    fields = ['image','title','subtitle','content','tags','category','published','allow_comments']
 
     def get_context_data(self, *args,**kwargs):
         context = super(ArticleDetailView,self).get_context_data(**kwargs)
@@ -130,7 +131,7 @@ class ArticleCreateView(LoginRequiredMixin, CreateView):
 
 class ArticleUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Article
-    fields = ['image','title','subtitle','content','tags','category',"allow_comments"]
+    fields = ['image','title','subtitle','content','tags','category','published','allow_comments']
     template_name = "article/article_update.html"
     # success_url = '/articles/'
 
