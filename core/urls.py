@@ -8,6 +8,7 @@ urlpatterns = [
     path("search/", SearchResultView.as_view(), name="search"),
     path("articles/bookmarked",BookmarkedArticleListView.as_view(),name="bookmarked-article-list"),
     path("articles/categorized/<str:category>/",CategoryListView.as_view(),name="categorized-article-list"),
+    path("articles/user/",UserArticleListView.as_view(),name="user-articles-list"),
     path("articles/published/<str:username>/",PublishedArticleListView.as_view(),name="user-published-articles-list"),
     path("articles/drafted/",DraftedArticleListView.as_view(),name="drafted-articles-list"),
     path("articles/",ArticleListView.as_view(),name="article-list"),

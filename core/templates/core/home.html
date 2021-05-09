@@ -31,9 +31,15 @@
                     <div class="card-body">
                         <h3 class="card-title font-weight-bold">{{ first.title }}</h3>
                         <p class="card-text">{{ first.content|slice:":255"|safe_markdown }}</p>
-                        <p class="card-text"><small class="text-dark">Posted {{ first.created_at|date:"d.F.Y" }} from {{last.author}}</small></p>
-                        <a href="{{ first.get_absolute_url }}"
-                                class="btn btn-link float-end text-dark nav-link font-weight-bold">Read more</a>
+                        {% comment %} <p class="card-text"><small class="text-dark">Posted {{ first.created_at|date:"d.F.Y" }} from {{first.author}}</small></p> {% endcomment %}
+                        <p class="card-text mt-3">
+                            {% if request.user == first.author %}
+                                <small class="text-dark">Posted at {{ first.created_at|date:"d.F.Y" }} from <a href="{% url 'user-articles-list' %}">{{first.author}}</a></small>
+                            {% else %}
+                                <small class="text-dark">Posted at {{ first.created_at|date:"d.F.Y" }} from <a href="{% url 'user-published-articles-list' username=first.author %}">{{first.author}}</a></small>
+                            {% endif %}
+                        </p>  
+                        <a href="{{ first.get_absolute_url }}"class="btn btn-link float-end text-dark nav-link font-weight-bold">Read more</a>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -57,7 +63,14 @@
                         <a href="{% url 'article-detail' item.id %}" class="btn btn-link float-end text-dark font-weight-bold">Read more</a>
                     </div>
                     <div class="card-footer">
-                        <p class="card-text"><small class="text-dark">Posted {{ first.created_at|date:"d.F.Y" }} from {{last.author}}</small></p>
+                        {% comment %} <p class="card-text"><small class="text-dark">Posted {{ item.created_at|date:"d.F.Y" }} from {{item.author}}</small></p> {% endcomment %}
+                        <p class="card-text mt-3">
+                            {% if request.user == item.author %}
+                                <small class="text-dark">Posted at {{ item.created_at|date:"d.F.Y" }} from <a href="{% url 'user-articles-list' %}">{{item.author}}</a></small>
+                            {% else %}
+                                <small class="text-dark">Posted at {{ item.created_at|date:"d.F.Y" }} from <a href="{% url 'user-published-articles-list' username=item.author %}">{{item.author}}</a></small>
+                            {% endif %}
+                        </p>  
                     </div>
                 </div>
             </div>
@@ -71,10 +84,15 @@
                 <div class="card-body">
                     <h3 class="card-title font-weight-bold">{{ last.title }}</h3>
                     <p class="card-text">{{ last.content|slice:":255"|safe_markdown }}</p>
-                    <p class="card-text"><small class="text-dark">Posted {{ last.created_at|date:"d.F.Y" }} from {{last.author}}</small></p>
-                    <a href="{{ last.get_absolute_url }}"
-                                class="btn btn-link float-end text-dark nav-link font-weight-bold">Read more</a>
-                    
+                    {% comment %} <p class="card-text"><small class="text-dark">Posted {{ last.created_at|date:"d.F.Y" }} from {{last.author}}</small></p> {% endcomment %}
+                    <p class="card-text mt-3">
+                        {% if request.user == last.author %}
+                            <small class="text-dark">Posted at {{ last.created_at|date:"d.F.Y" }} from <a href="{% url 'user-articles-list' %}">{{last.author}}</a></small>
+                        {% else %}
+                            <small class="text-dark">Posted at {{ last.created_at|date:"d.F.Y" }} from <a href="{% url 'user-published-articles-list' username=last.author %}">{{last.author}}</a></small>
+                        {% endif %}
+                    </p>  
+                    <a href="{{ last.get_absolute_url }}"class="btn btn-link float-end text-dark nav-link font-weight-bold">Read more</a>
                 </div>
             </div>
             <div class="col-md-4">

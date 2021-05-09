@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% load martortags %}
 
-{% block title %}List all published Articles from U{% endblock title %}
+{% block title %}List all drafted Articles from U{% endblock title %}
 
 {% block content %}
-<h1 class="text-center mb-3">Published Articles from "{{ view.kwargs.username }}" ({{ page_obj.paginator.count }})</h1>
+<h1 class="text-center mb-3">All Articles from "{{ request.user.username }}" ({{ page_obj.paginator.count }})</h1>
 <div class="container my-5">
   {% for article in articles %}
   <div class="card mb-3 shadow-sm">

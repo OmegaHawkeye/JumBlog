@@ -99,6 +99,16 @@ class PublishedArticleListView(LoginRequiredMixin,ListView):
     def get_queryset(self):
         return Article.objects.filter(author__username=self.kwargs.get("username"),published=True)
 
+class UserArticleListView(LoginRequiredMixin,ListView):
+    model = Article
+    template_name = 'article/user_article_list.html'
+    context_object_name = 'articles'
+    ordering = ['-created_at']
+    paginate_by = 20
+
+    def get_queryset(self):
+        return Article.objects.filter(author=self.request.user)
+
 
 class ArticleDetailView(LoginRequiredMixin,DetailView):
     model = Article

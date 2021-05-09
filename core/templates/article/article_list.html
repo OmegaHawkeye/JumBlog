@@ -25,7 +25,11 @@
             <small class="text-dark">Category: {{article.category}}</small>
           </p>
            <p class="card-text mt-3">
-            <small class="text-muted">Posted at {{ article.created_at|date:"d.F.Y" }} from {{article.author}} </small>
+            {% if request.user == article.author %}
+            <small class="text-muted">Posted at {{ article.created_at|date:"d.F.Y" }} from <a href="{% url 'user-articles-list' %}">{{article.author}}</a></small>
+            {% else %}
+            <small class="text-muted">Posted at {{ article.created_at|date:"d.F.Y" }} from <a href="{% url 'user-published-articles-list' username=article.author %}">{{article.author}}</a></small>
+            {% endif %}
           </p>  
           <a href="{{ article.get_absolute_url }}" class="btn btn-link float-end text-dark nav-link fw-bold">Read more</a>
         </div>
