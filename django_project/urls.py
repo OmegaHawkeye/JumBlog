@@ -1,12 +1,19 @@
+from core.sitemaps import ArticleViewSitemap
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django_email_verification import urls as email_urls
 import debug_toolbar
+from django.contrib.sitemaps.views import sitemap
 from core.views import handler404
 
+sitemaps = {
+    "Articles": ArticleViewSitemap
+}
+
 urlpatterns = [
+    path('sitemap.xml',sitemap,{'sitemaps':sitemaps},name="sitemap"),
     path('admin/', admin.site.urls),
     path("accounts/", include('users.urls')),
     path('email/', include(email_urls)),

@@ -1,7 +1,4 @@
-# from django.contrib.auth.models import User
-# from django.views.generic.edit import FormMixin
-# from django.contrib.messages.api import success
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import (
     ListView,
@@ -10,14 +7,11 @@ from django.views.generic import (
     UpdateView,
     DeleteView
 )
-
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from .models import Article
-# import random
 from django.db.models import Q
-# from gtts.tts import gTTS
-# from django.utils.safestring import SafeText
 
 def handler404(request,exception):
     return render(request, 'error/404.html', {"exception":exception,"request":request}, status=404)
@@ -45,13 +39,15 @@ def BookmarkView(request,pk):
         bookmarked = True
     return HttpResponseRedirect(reverse("article-detail",args=[str(pk)]))
 
+def landing(request):
+    return render(request,"core/landing.html")
+
+@login_required
 def home(request):
-    # first_article_id = Article.objects.first().id
-    # last_article_id = Article.objects.last().id
-    # random_Article_id = random.randrange(first_article_id,last_article_id)
-    first = Article.objects.first()
-    last = Article.objects.last()
-    triple = Article.objects.all()[1:4]
+    first = Article.objects.filter(published=True).first()
+    last = Article.objects.filter(published=True).last()
+    triple = Article.objects.filter(published=True)[1:4]
+    
     return render(request,"core/home.html",{"first":first,"last":last,"triple":triple})
 
 class BookmarkedArticleListView(LoginRequiredMixin,ListView):
@@ -59,10 +55,19 @@ class BookmarkedArticleListView(LoginRequiredMixin,ListView):
     template_name = 'article/bookmarked_article_list.html'
     context_object_name = 'bookmarked_articles'
     ordering = ['-created_at']
-    paginate_by = 5
 
     def get_queryset(self):
         return Article.objects.filter(bookmarked=True)
+
+class CategoryListView(LoginRequiredMixin,ListView):
+    model = Article
+    template_name = 'article/categorized_article_list.html'
+    context_object_name = 'categorized_articles'
+    ordering = ['-created_at']
+    paginate_by = 5
+
+    def get_queryset(self):
+        return Article.objects.filter(category=self.kwargs.get("category"))
 
 class ArticleListView(LoginRequiredMixin,ListView):
     model = Article
@@ -71,11 +76,15 @@ class ArticleListView(LoginRequiredMixin,ListView):
     ordering = ['-created_at']
     paginate_by = 20
 
+    def get_queryset(self):
+        return Article.objects.filter(published=True)
+
+
 class ArticleDetailView(LoginRequiredMixin,DetailView): #FormMixin
     model = Article
     template_name = "article/article_detail.html"
     context_object_name = "article"
-    fields = ("title","subtitle","content","image","tags","bookmarked","liked")
+    fields = ("title","subtitle","content","image","tags","category","bookmarked","liked")
 
     # def get_success_url(self):
     #     return reverse('article-detail', kwargs={'pk': self.id})
@@ -109,20 +118,10 @@ class ArticleDetailView(LoginRequiredMixin,DetailView): #FormMixin
         context["bookmarked"] = bookmarked
         return context
 
-class CategoryListView(LoginRequiredMixin,ListView):
-    model = Article
-    template_name = 'article/categorized_article_list.html'
-    context_object_name = 'categorized_articles'
-    ordering = ['-created_at']
-    paginate_by = 5
-
-    def get_queryset(self):
-        return Article.objects.filter(category=self.kwargs.get("category"))
-
 class ArticleCreateView(LoginRequiredMixin, CreateView):
     model = Article
     template_name = "article/article_create.html"
-    fields = ['image','title','subtitle','content','tags','category',"allow_comments"]
+    fields = ['image','title','subtitle','content','tags','category','published','allow_comments']
     success_url = "/articles/"
 
     def form_valid(self, form):
@@ -170,7 +169,7 @@ class SearchResultView(ListView):
             Q(subtitle__icontains=query) |
             Q(author__username__icontains=query) |
             Q(content__icontains=query) |
-            Q(categorie__name__icontains=query) |
+            Q(category__icontains=query) |
             Q(tags__name__icontains=query)
         ).distinct()
         return object_list
@@ -179,7 +178,7 @@ class SearchResultView(ListView):
 class CreateArticle(LoginRequiredMixin,CreateView):
     model = Article
     template_name = "article/writeArticle.html"
-    fields = ['image','title','subtitle','content','categorie','tags']
+    fields = ['image','title','subtitle','content','category','tags']
     success_url = "/articles/"
 
     def form_valid(self, form):

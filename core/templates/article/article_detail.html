@@ -25,8 +25,8 @@
         <h6 class="font-weight-bold">Written by {{article.author}}</h6>
         <p class="text-secondary ">{{ article.created_at|date:"d.F.Y" }}</p>
         {% if article.author == user %}
-            <a class="btn btn-secondary btn-sm mr-2" href="{% url 'article-update' article.id %}"><i class="fas fa-edit"></i>Edit</a>
-            <a class="btn btn-danger btn-sm" href="{% url 'article-delete' article.id %}"><i class="fa fa-trash-alt"> Delete</i></a>
+            <a class="btn btn-secondary btn-sm mr-2" href="{% url 'article-update' article.id %}">Edit</a>
+            <a class="btn btn-danger btn-sm" href="{% url 'article-delete' article.id %}">Delete</i></a>
         {% endif %}
     </div>
     <hr>
@@ -36,17 +36,17 @@
     <form action="{% url 'like-article' article.id %}" method="post">
         {% csrf_token %}
         {% if liked %}
-            <button type="submit" name="article_id" value="{{article.id}}" class="btn btn-outline-primary my-3"><i class="fas fa-heart"></i></button>
+            <button type="submit" name="article_id" value="{{article.id}}" class="btn btn-danger btn-sm my-3 mx-3"><i class="bi bi-heart-fill"></i></button>
         {% else %}
-            <button type="submit" name="article_id" value="{{article.id}}" class="btn btn-outline-primary my-3"><i class="far fa-heart"></i></button>
+            <button type="submit" name="article_id" value="{{article.id}}" class="btn btn-secondary btn-sm my-3 mx-3"><i class="bi bi-heart"></i></button>
         {% endif %}
     </form>
     <form action="{% url 'bookmark-article' article.id %}" method="post">
         {% csrf_token %}
         {% if bookmarked %}
-            <button type="submit" name="article_id" value="{{article.id}}" class="btn btn-outline-primary my-3 mx-3"><i class="fas fa-bookmark"></i></button>
+            <button type="submit" name="article_id" value="{{article.id}}" class="btn btn-dark btn-sm my-3 mx-3"><i class="bi bi-bookmark-fill"></i></button>
         {% else %}
-            <button type="submit" name="article_id" value="{{article.id}}" class="btn btn-outline-primary my-3 mx-3"><i class="far fa-bookmark"></i></button>
+            <button type="submit" name="article_id" value="{{article.id}}" class="btn btn-secondary btn-sm my-3 mx-3"><i class="bi bi-bookmark"></i></button>
         {% endif %}
     </form>
 </div>

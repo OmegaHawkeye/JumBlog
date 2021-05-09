@@ -5,17 +5,23 @@
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">    
 
-    <!-- Fontawesome Icons CDN -->
-    <script src="https://kit.fontawesome.com/8a03269e5f.js" crossorigin="anonymous"></script>
+    {% comment %}<!-- Fontawesome Icons CDN --><script src="https://kit.fontawesome.com/8a03269e5f.js" crossorigin="anonymous"></script> {% endcomment %}
 
-    <!-- Favicon -->
-    <!-- <link rel="icon" href="{% static 'favicon/favicon.ico' %}" sizes="32x32" /> -->
+   {% comment %}<!-- Favicon --><link rel="icon" href="{% static 'favicon/favicon.ico' %}" sizes="32x32" /> {% endcomment %}
+
+    <!-- Bootstrap 5 & Icons CSS CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+    
+    <!-- Animate CSS CDN-->
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="{% static 'css/main.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/footer.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/main2.css' %}" />
+    {% comment %} <link rel="stylesheet" href="{% static 'css/main.css' %}" /><link rel="stylesheet" href="{% static 'css/animate.min.css' %}" /> {% endcomment %}
     
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;800&display=swap" rel="stylesheet">
@@ -27,58 +33,74 @@
 
 
     <title>JumBlog | {% block title %}{% endblock title %}</title>
-
+    
     {% block extrahead %}{% endblock extrahead %}
 </head>
 
 <body>
-    {% comment %} {% url 'login' as login_url %}
-    {% url 'register' as register_url %}
-
-    {% if request.get_full_path != login_url and request.get_full_path != register_url  %} {% endcomment %}
-    <div class="container">
-        <nav class="navbar navbar-expand-lg navbar-light bg-white">
-            <a class="navbar-brand font-weight-bold" href="{% url 'home' %}">JumBlog</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav ml-auto mt-2">
-                    {% if user.is_authenticated %}
-                    <form style="width:400px;"class="mx-lg-3" action="{% url 'search' %}" method="GET">
-                        <div class="form-group">
-                            <input class="form-control" type="search" placeholder="Search" name="q" autocomplete="off" aria-label="Search">
-                        </div>
-                    </form>
-                    {% if user.is_superuser %}
-                        <li class="nav-item ml-lg-5 mr-3">
+    <header class="position-relative" data-aos="fade-down">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg navbar-light py-4">
+                {% if user.is_authenticated %}
+                <a class="navbar-brand" href="{% url 'home' %}">
+                    <h1 class="h3 mt-0 fw-bold">JumBlog</h1>
+                </a>
+                {% else %}
+                 <a class="navbar-brand" href="{% url 'landing' %}">
+                    <h1 class="h3 mt-0 fw-bold">JumBlog</h1>
+                </a>
+                {% endif %}
+                <button class="navbar-toggler" type="button" data-bs-target="#navbarSupportedContent"
+                    data-bs-toggle="collapse" aria-controls="navbarSupportedContent" aria-expanded="false"aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse ms-lg-5  mt-4 mt-lg-0" id="navbarSupportedContent">
+                    <ul class="navbar-nav align-items-center">
+                        {% if user.is_authenticated %}
+                            <form style="width:350px;" action="{% url 'search' %}" method="GET">
+                                <div class="form-group">
+                                    <input class="form-control" type="search" placeholder="Search" name="q" autocomplete="off" aria-label="Search">
+                                </div>
+                            </form>
+                        {% else %}
+                            <li class="nav-item"><a class="nav-link" href="#"><span>Start Blogging and find your audience, done right!  😎 </span></a></li>
+                        {% endif %}
+                    </ul>
+                    <ul class="navbar-nav mt-4 mt-lg-0 ms-auto align-items-center">
+                        {% if user.is_authenticated %}
+                         {% if user.is_superuser %}
+                        <li class="nav-item mx-3">
                             <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
                         </li>
-                    {% endif %}
-                    <li class="nav-item mr-3">
-                        <a class="nav-link" href="{% url 'article-create' %}">Write a Blog</a>
-                    </li>
-                    <li class="nav-item mr-3">
-                        <a class="nav-link" href="{% url 'bookmarked-article-list' %}">Reading List</a>
-                    </li>
-                    <li class="nav-item mr-3">
-                        <a class="nav-link" href="{% url 'logout' %}">Logout</a>
-                    </li>
-                    {% else %}
-                    <li class="nav-item mr-3">
-                        <a class="nav-link" href="{% url 'login' %}">Log in</a>
-                    </li>
-                    <li class="nav-item mr-3">
-                        <a class="nav-link" href="{% url 'register' %}">Create account</a>
-                    </li>
-                    {% endif %}
-                </ul>
-            </div>
-        </nav>
-    </div>
-    {% comment %} {% endif %} {% endcomment %}
+                        {% endif %}
+                        <li class="nav-item mx-3">
+                            <a class="nav-link" href="{% url 'article-create' %}">Write a Blog</a>
+                        </li>
+                        <li class="nav-item mx-3">
+                            <a class="nav-link" href="{% url 'bookmarked-article-list' %}">Reading List</a>
+                        </li>
+                        <li class="nav-item mx-3">
+                            <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                        </li>
+                        {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link primary-text-color" href="{% url 'login' %}">
+                                <strong>Login</strong>
+                            </a>
+                        </li>
+                        <li class="nav-item ms-lg-4 mt-4 mt-lg-0">
+                            <a class="btn primary-color" href="{% url 'register' %}">
+                                <span class="btn-text light-text-color">Become a member</span>
+                                <i class="bi bi-arrow-right-short icn-xs light-text-color" style="margin-left: 15px"></i>
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </header>
+
     <div class="container-fluid">
         {% if messages %}
             <div>   
@@ -89,18 +111,18 @@
         {% endif %}
         {% block content %}{% endblock content %} 
     </div>
-    {% include 'core/footer.html' %}
+    {% include 'core/footer.html'%}
 </body>
 
-<!-- Bootstrap/Popper/Jquery CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"
-    rel="stylesheet" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
-</script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+{% comment %} <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script> {% endcomment %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script>
+
+
+<script>
+    AOS.init();
+    var scrollSpy = new bootstrap.ScrollSpy(document.body, {
+        target: '#navbar-scroll'
+    })
 </script>
 
 </html>

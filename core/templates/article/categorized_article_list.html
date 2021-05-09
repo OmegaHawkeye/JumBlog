@@ -3,7 +3,6 @@
 
 {% block title %}List of all Articles but Categorized{% endblock title %}
 
-
 {% block content %}
 
 <h1 class="text-center mb-3">Articles with the Category "{{ view.kwargs.category }}" ({{ page_obj.paginator.count }})</h1>
@@ -24,7 +23,7 @@
             <span class="badge badge-pill badge-primary">{{tag}}</span>
           {% endfor %} 
           <a href="{{ categorized_article.get_absolute_url }}"
-            class="btn btn-link float-right text-dark nav-link font-weight-bold">Read more</a>
+            class="btn btn-link float-end text-dark nav-link font-weight-bold">Read more</a>
         </div>
       </div>
       <div class="col-md-4">

@@ -1,22 +1,23 @@
 import os
 from pathlib import Path
 from decouple import config
+import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'm5zywpxsl+tu8$2d(u4_utr+v%)nvii94fc+hj2ixnfr4uwv0w'
 
-DEBUG = True
+DEBUG = False
 
-# ALLOWED_HOSTS = ["*"]
+# ALLOWED_HOSTS = ['*']
 
 # MANAGERS = (
 #     ('Julian Chornitzer', 'chornitzerj@gmail.com'),
 # )
 
-ADMINS = [("Julian Chornitzer","chornitzerj@gmail.com")]
+ADMINS = [('Julian Chornitzer','chornitzerj@gmail.com')]
 
-ALLOWED_HOSTS = ["127.0.0.1", "jumblog.herokuapp.com"]
+ALLOWED_HOSTS = ['127.0.0.1', 'jumblog.herokuapp.com']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -25,10 +26,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    "django.contrib.sites",
+    'django.contrib.sitemaps',
+    'django.contrib.sites',
     'core',
     'users.apps.UsersConfig',
     'crispy_forms',
+    'crispy_bootstrap5',
     'django_email_verification',
     'allauth',
     'allauth.account',
@@ -37,12 +40,10 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.linkedin',
     'debug_toolbar',
-    # 'ckeditor',
     'martor',
     'taggit',
     'django_comments_xtd',
     'django_comments',
-    'django_extensions',
 ]
 
 
@@ -81,13 +82,16 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'django_project.wsgi.application'
 
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+db_from_env = dj_database_url.config(conn_max_age=600)
+DATABASES['default'].update(db_from_env)
+    
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -114,17 +118,19 @@ USE_L10N = True
 
 USE_TZ = True
 
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
+CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
 
-LOGIN_REDIRECT_URL = "home"
+CRISPY_TEMPLATE_PACK = 'bootstrap5'
+
+LOGIN_REDIRECT_URL = 'home'
 LOGIN_URL = 'login'
-# LOGOUT_REDIRECT_URL = "home"
+LOGOUT_REDIRECT_URL = 'landing'
 
 def verified_callback(user):
     user.is_active = True
 
 EMAIL_VERIFIED_CALLBACK = verified_callback
-EMAIL_FROM_ADDRESS = "jumblogoffice@gmail.com"
+EMAIL_FROM_ADDRESS = 'jumblogoffice@gmail.com'
 EMAIL_MAIL_SUBJECT = 'Confirm your email'
 EMAIL_MAIL_HTML = 'email_confirm/mail_body.html'
 EMAIL_MAIL_PLAIN = 'email_confirm/mail_body.txt'
@@ -132,7 +138,7 @@ EMAIL_TOKEN_LIFE = 60 * 60
 EMAIL_PAGE_TEMPLATE = 'email_confirm/confirm_template.html'
 
 if DEBUG:
-    EMAIL_PAGE_DOMAIN = "127.0.0.1:8000"
+    EMAIL_PAGE_DOMAIN = '127.0.0.1:8000'
 else:
     EMAIL_PAGE_DOMAIN = 'https://jumblog.herokuapp.com'
     
@@ -142,17 +148,17 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
-EMAIL_HOST_USER = "jumblogoffice@gmail.com"
+EMAIL_HOST_USER = 'jumblogoffice@gmail.com'
 
-EMAIL_HOST_PASSWORD  = "%rJSjN#96xuF#y^pRv85*jNkF34m"
+EMAIL_HOST_PASSWORD  = '%rJSjN#96xuF#y^pRv85*jNkF34m'
 
-AWS_STORAGE_BUCKET_NAME = "jumblog"
+AWS_STORAGE_BUCKET_NAME = 'jumblog'
 
-AWS_SECRET_ACCESS_KEY = "YFmO2/IcohZkd++DraMMqV4qy1uGGllZ/DzIouo9"
+AWS_SECRET_ACCESS_KEY = 'YFmO2/IcohZkd++DraMMqV4qy1uGGllZ/DzIouo9'
 
-AWS_ACCESS_KEY_ID = "AKIAYBOUMUXQFXEAFISG"
+AWS_ACCESS_KEY_ID = 'AKIAYBOUMUXQFXEAFISG'
 
-AWS_URL = "https://jumblog.s3.amazonaws.com/"
+AWS_URL = 'https://jumblog.s3.amazonaws.com/'
 
 AWS_S3_REGION_NAME = 'eu-central-1'
 
@@ -189,13 +195,15 @@ MARTOR_ENABLE_CONFIGS = {
 MARTOR_TOOLBAR_BUTTONS = [
     'bold', 'italic', 'horizontal', 'heading', 'pre-code',
     'blockquote', 'unordered-list', 'ordered-list',
-    'link', 'image-link', 'image-upload', 'emoji',
-    'direct-mention', 'toggle-maximize', 'help'
-]
+    'link', 'image-link', 'emoji','toggle-maximize', 'help'
+] #'image-upload','direct-mention',
 
 MARTOR_ENABLE_LABEL = True
 
 MARTOR_MARKDOWN_BASE_MENTION_URL = 'http://jumblog.herokuapp.com/' 
+
+# MARTOR_ALTERNATIVE_JS_FILE_THEME = "js/bootstrap.bundle.min.js"
+MARTOR_ALTERNATIVE_CSS_FILE_THEME = "css/main.css"
 
 # CSRF_COOKIE_HTTPONLY = False
 
@@ -211,3 +219,4 @@ COMMENTS_XTD_APP_MODEL_OPTIONS = {
         'who_can_post': 'users'  # Valid values: 'all', users'
     }
 }
+

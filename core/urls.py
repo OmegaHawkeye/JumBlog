@@ -1,7 +1,10 @@
 from django.urls import path
 from .views import *
+
 urlpatterns = [
+    path("landing/",landing,name="landing"),
     path("",home,name="home"),
+    
     path("search/", SearchResultView.as_view(), name="search"),
     path("articles/bookmarked",BookmarkedArticleListView.as_view(),name="bookmarked-article-list"),
     path("articles/categorized/<str:category>/",CategoryListView.as_view(),name="categorized-article-list"),
@@ -14,4 +17,5 @@ urlpatterns = [
     path("bookmark/<int:pk>/",BookmarkView,name="bookmark-article"),
     path("like/<int:pk>/",LikeView,name="like-article"),
     path("create/article/",CreateArticle.as_view(),name="create-article"),
+    
 ]
