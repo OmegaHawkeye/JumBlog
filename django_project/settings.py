@@ -94,12 +94,15 @@ if DEBUG:
 else:
     DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME':  "d333llivg5d2bn",
-        'USER':   "vqdeyhkzmqswkg",
-        'PASSWORD': "4835dad862c02b74b259a4bdf9062d0cc190060e8327c8c9c201eea77fa07e24",
-        'HOST':  "ec2-54-220-170-192.eu-west-1.compute.amazonaws.com",
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME':  "heroku_c1c7c1e1707e83e",
+        'USER':   "b924bf1df94fa3",
+        'PASSWORD': "2297439e",
+        'HOST':  "eu-cdbr-west-01.cleardb.com",
+        'PORT': '3306',
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
+            }
         }   
     }    
 
