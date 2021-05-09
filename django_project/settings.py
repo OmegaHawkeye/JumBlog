@@ -9,7 +9,7 @@ SECRET_KEY = 'm5zywpxsl+tu8$2d(u4_utr+v%)nvii94fc+hj2ixnfr4uwv0w'
 
 DEBUG = False
 
-# ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*']
 
 # MANAGERS = (
 #     ('Julian Chornitzer', 'chornitzerj@gmail.com'),
@@ -17,7 +17,7 @@ DEBUG = False
 
 ADMINS = [('Julian Chornitzer','chornitzerj@gmail.com')]
 
-ALLOWED_HOSTS = ['127.0.0.1', 'jumblog.herokuapp.com']
+# ALLOWED_HOSTS = ['127.0.0.1', 'jumblog.herokuapp.com']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -84,24 +84,24 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'django_project.wsgi.application'
 
-if DEBUG:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
-else:
-    DATABASES = {
+# if DEBUG:
+DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME':  "d54ia883272jok",
-        'USER':   "mxdhqjnvjbfwlk",
-        'PASSWORD': "aa7e43cec1c3562efa6be039384ee39676ae5d539063390d2ca16198c201e2db",
-        'HOST':  "ec2-34-247-118-233.eu-west-1.compute.amazonaws.com",
-        'PORT': '5432',
-        }   
-    }    
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+# else:
+#     DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME':  "d54ia883272jok",
+#         'USER':   "mxdhqjnvjbfwlk",
+#         'PASSWORD': "aa7e43cec1c3562efa6be039384ee39676ae5d539063390d2ca16198c201e2db",
+#         'HOST':  "ec2-34-247-118-233.eu-west-1.compute.amazonaws.com",
+#         'PORT': '5432',
+#         }   
+#     }    
 
 AUTH_PASSWORD_VALIDATORS = [
     {
