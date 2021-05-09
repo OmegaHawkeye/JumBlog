@@ -84,24 +84,24 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'django_project.wsgi.application'
 
-# if DEBUG:
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
-# else:
-#     DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME':  "d54ia883272jok",
-#         'USER':   "mxdhqjnvjbfwlk",
-#         'PASSWORD': "aa7e43cec1c3562efa6be039384ee39676ae5d539063390d2ca16198c201e2db",
-#         'HOST':  "ec2-34-247-118-233.eu-west-1.compute.amazonaws.com",
-#         'PORT': '5432',
-#         }   
-#     }    
+else:
+    DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME':  "d333llivg5d2bn",
+        'USER':   "vqdeyhkzmqswkg",
+        'PASSWORD': "4835dad862c02b74b259a4bdf9062d0cc190060e8327c8c9c201eea77fa07e24",
+        'HOST':  "ec2-54-220-170-192.eu-west-1.compute.amazonaws.com",
+        'PORT': '5432',
+        }   
+    }    
 
 AUTH_PASSWORD_VALIDATORS = [
     {
