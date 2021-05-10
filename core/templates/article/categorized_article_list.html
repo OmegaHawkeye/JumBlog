@@ -1,7 +1,12 @@
 {% extends "base.html" %}
 {% load martortags %}
+{% load cropping %}
 
 {% block title %}List of all Articles but Categorized{% endblock title %}
+
+{% block extrahead %}
+  {{form.media}}
+{% endblock extrahead %}
 
 {% block content %}
 
@@ -27,9 +32,8 @@
         </div>
       </div>
       <div class="col-md-4">
-        <img
-          src="{{ categorized_article.image.url }}"
-          class="card-img" alt="..." />
+        <img src="{% cropped_thumbnail categorized_article "default_cropping" %}">
+        {% comment %} <img src="{{ categorized_article.image.url }}" class="card-img" alt="..." /> {% endcomment %}
       </div>
     </div>
   </div>

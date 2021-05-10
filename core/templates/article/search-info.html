@@ -1,7 +1,12 @@
 {% extends "base.html" %}
 {% load martortags %}
+{% load cropping %}
 
 {% block title %}Search Results{% endblock title %}
+
+{% block extrahead %}
+  {{form.media}}
+{% endblock extrahead %}
 
 {% block content %}
 <div class="container mt-5">
@@ -26,9 +31,8 @@
           </div>
         </div>
         <div class="col-md-4">
-          <img
-            src="{{ result.image.url }}"
-            class="card-img" alt="..." />
+          <img src="{% cropped_thumbnail result "default_cropping" %}">
+          {% comment %} <img src="{{ result.image.url }}" class="card-img" alt="..." /> {% endcomment %}
         </div>
       </div>
     </div>

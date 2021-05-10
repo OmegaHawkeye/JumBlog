@@ -1,7 +1,13 @@
 {% extends "base.html" %}
 {% load martortags %}
+{% load cropping %}
 
 {% block title %}List all drafted Articles from U{% endblock title %}
+
+{% block extrahead %}
+  {{form.media}}
+{% endblock extrahead %}
+
 
 {% block content %}
 <h1 class="text-center mb-3">Drafted Articles from "{{ request.user.username }}" ({{ page_obj.paginator.count }})</h1>
@@ -31,9 +37,8 @@
         </div>
       </div>
       <div class="col-md-4">
-        <img
-          src="{{ article.image.url }}"
-          class="card-img" alt="..." />
+        <img src="{% cropped_thumbnail article "default_cropping" %}">
+        {% comment %} <img src="{{ article.image.url }}" class="card-img" alt="..." /> {% endcomment %}
       </div>
     </div>
   </div>

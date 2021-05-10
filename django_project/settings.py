@@ -11,9 +11,9 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
-# MANAGERS = (
-#     ('Julian Chornitzer', 'chornitzerj@gmail.com'),
-# )
+MANAGERS = (
+    ('Julian Chornitzer', 'chornitzerj@gmail.com'),
+)
 
 ADMINS = [('Julian Chornitzer','chornitzerj@gmail.com')]
 
@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'taggit',
     'django_comments_xtd',
     'django_comments',
+    'easy_thumbnails',
+    'image_cropping',
 ]
 
 if DEBUG:
@@ -226,10 +228,15 @@ COMMENTS_XTD_CONFIRM_EMAIL = True
 
 COMMENTS_XTD_APP_MODEL_OPTIONS = {
     'default': {
-        'allow_flagging': True,
-        'allow_feedback': True,
-        'show_feedback': True,
+        'allow_flagging': False,
+        'allow_feedback': False,
+        'show_feedback': False,
         'who_can_post': 'users'  # Valid values: 'all', users'
     }
 }
+
+from easy_thumbnails.conf import Settings as thumbnail_settings
+THUMBNAIL_PROCESSORS = (
+    'image_cropping.thumbnail_processors.crop_corners',
+) + thumbnail_settings.THUMBNAIL_PROCESSORS
 

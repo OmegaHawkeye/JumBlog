@@ -1,8 +1,13 @@
 {% extends "base.html" %}
 {% load static %}
 {% load martortags %}
+{% load cropping %}
 
 {% block title %}Home{% endblock title %}
+
+{% block extrahead %}
+  {{form.media}}
+{% endblock extrahead %}
 
 {% block content %}
 
@@ -24,7 +29,8 @@
     </div>
     {% endif %} {% endcomment %}
     <!-- CONTENT -->
-    {% if first %}    <div class="container mt-4">
+    {% if first %}    
+    <div class="container mt-4">
         <div class="card mb-3 shadow-sm">
             <div class="row">
                 <div class="col-md-8 align-self-center">
@@ -43,8 +49,8 @@
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <img src="{{ first.image.url }}"
-                        class="card-img" alt="...">
+                    <img src="{% cropped_thumbnail first "default_cropping" %}">
+                    {% comment %} <img src="{{ first.image.url }}" class="card-img" alt="..."> {% endcomment %}
                 </div>
             </div>
         </div>
@@ -55,11 +61,11 @@
             {% for item in triple %}
             <div class="col-md-4">
                 <div class="card shadow-sm">
-                    <img src="{{ item.image.url }}"
-                        class="card-img-top" alt="...">
+                    <img src="{% cropped_thumbnail item "default_cropping" %}">
+                    {% comment %} <img src="{{ item.image.url }}" class="card-img-top" alt="..."> {% endcomment %}
                     <div class="card-body">
                         <h4 class="card-title font-weight-bold">{{ item.title }}</h4> 
-                        <p class="card-text">{{ item.content|slice:":255"|safe_markdown }}</p>
+                        <p class="card-text">{{ item.content|slice:":75"|safe_markdown }}</p>
                         <a href="{% url 'article-detail' item.id %}" class="btn btn-link float-end text-dark font-weight-bold">Read more</a>
                     </div>
                     <div class="card-footer">
@@ -96,8 +102,8 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <img src="{{ last.image.url }}"
-                    class="card-img" alt="...">
+                <img src="{% cropped_thumbnail last "default_cropping" %}">
+                {% comment %} <img src="{{ last.image.url }}" class="card-img" alt="..."> {% endcomment %}
             </div>
         </div>
         <a class="btn btn-more float-end text-light mb-5"href="{% url "article-list" %}">See more <i class="ri-arrow-down-circle-fill"></i></a>
