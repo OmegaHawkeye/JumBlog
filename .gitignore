@@ -1,7 +1,6 @@
 /history
 __pycache__ 
 /.vscode
-staticfiles
 venv
 .env
 /landing page
