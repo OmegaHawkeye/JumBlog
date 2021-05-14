@@ -40,8 +40,8 @@
         </div>
       </div>
       <div class="col-md-4">
-        {% comment %} <img src="{{ article.image.url }}" class="card-img" alt="..." /> {% endcomment %}
-        <img src="{% cropped_thumbnail article "default_cropping" %}">
+        <img src="{{article.image_thumbnail.url}}" class="card-img" alt="..." />
+        {% comment %} <img src="{% cropped_thumbnail article "default_cropping" %}"> {% endcomment %}
       </div>
     </div>
   </div>

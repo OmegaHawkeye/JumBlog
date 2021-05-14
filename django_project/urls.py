@@ -6,7 +6,7 @@ from django.conf.urls.static import static
 from django_email_verification import urls as email_urls
 import debug_toolbar
 from django.contrib.sitemaps.views import sitemap
-from core.views import handler404
+from core.views import handler404,handler500
 
 sitemaps = {
     "Articles": ArticleViewSitemap
@@ -31,3 +31,4 @@ if settings.DEBUG:
                         document_root=settings.STATIC_ROOT)
 
 handler404 = handler404
+handler500 = handler500

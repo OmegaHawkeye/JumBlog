@@ -10,7 +10,7 @@
 
 
 {% block content %}
-<div class="container mt-5">
+<div class="container my-5">
   <div class="card mb-3 shadow-sm">
     <div class="row">
       <div class="col-md-8 align-self-center">
@@ -27,21 +27,17 @@
 </div>
 
 
-<div class="container mt-4">
+<div class="container my-4">
   <div class="row">
   {% for bookmarked_article in bookmarked_articles %}
-    <div class="col-md-4">
+    <div class="col-md-4 my-3">
       <div class="card shadow-sm">
-        <img src="{% cropped_thumbnail bookmarked_article "default_cropping" %}">
-        {% comment %} <img src="{{ bookmarked_article.image.url }}" class="card-img-top" alt="..." /> {% endcomment %}
+        {% comment %} <img src="{% cropped_thumbnail bookmarked_article "default_cropping" %}"> {% endcomment %}
+        <img src="{{ bookmarked_article.image_thumbnail.url }}" class="card-img-top" alt="..." />
         <div class="card-body">
           <h4 class="card-title font-weight-bold">{{bookmarked_article.title}}</h4>
           <p class="card-text">{{bookmarked_article.content|slice:":150"|safe_markdown}}</p>
-          <a
-            href="{{ bookmarked_article.get_absolute_url }}"
-            class="btn btn-link float-end text-dark font-weight-bold"
-            >Read more</a
-          >
+          <a href="{{ bookmarked_article.get_absolute_url }}" class="btn btn-link float-end text-dark font-weight-bold">Read more</a>
         </div>
       </div>
     </div>
@@ -50,7 +46,7 @@
 </div>
 
 
-<div class="container mt-4 bg-latest">
+<div class="container my-4 bg-latest">
   <div class="row">
     <div class="col-md-8 align-self-center">
       <div class="card-body">

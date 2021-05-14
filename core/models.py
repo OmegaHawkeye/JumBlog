@@ -5,7 +5,9 @@ from taggit.managers import TaggableManager
 from django_comments.moderation import CommentModerator
 from django_comments_xtd.moderation import moderator
 from martor.models import MartorField
-from image_cropping import ImageRatioField
+# from image_cropping import ImageRatioField,ImageCropField
+from imagekit.models import ImageSpecField ,ProcessedImageField
+from imagekit.processors import ResizeToFill
 
 CATEGORY_CHOICES = (
     ('WebDevelopment','Web Development'),
@@ -21,8 +23,11 @@ class Article(models.Model):
     subtitle = models.CharField(max_length=100,null=True,blank=True)
     author = models.ForeignKey(User,on_delete=models.CASCADE)
     content = MartorField()
-    image = models.ImageField(upload_to="article_pics/")
-    default_cropping = ImageRatioField('image', '400x400')
+    image = models.ImageField(blank=True,upload_to="article_pics/")
+    # image = ImageCropField(blank=True,upload_to="article_pics/")
+    # default_cropping = ImageRatioField('image', '400x400')
+    # image = ProcessedImageField(blank=True,upload_to='article_pics/',processors=[ResizeToFill(400,400)],format='JPEG', options={'quality': 60})
+    image_thumbnail = ImageSpecField(source='image',processors=[ResizeToFill(400,400)],format='JPEG', options={'quality': 60})
     category = models.CharField(max_length=155,choices=CATEGORY_CHOICES,null=True,blank=True)
     tags = TaggableManager()
     bookmarked= models.BooleanField(default=False)

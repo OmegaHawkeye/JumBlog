@@ -16,8 +16,9 @@
 
 {% comment %} <div class="article-section mt-4"> {% endcomment %}
     <div class="container my-3">
-        <img src="{% cropped_thumbnail article "default_cropping" %}" class="mx-auto d-flex">
+        {% comment %} <img src="{% cropped_thumbnail article "default_cropping" %}" class="mx-auto d-flex"> {% endcomment %}
         {% comment %} <img src="{{article.image.url}}" class="img-fluid"> {% endcomment %}
+        <img src="{{article.image_thumbnail.url}}" class="mx-auto d-flex">
     </div>
 {% comment %} </div> {% endcomment %}
 <div class="container my-4">

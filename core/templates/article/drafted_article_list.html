@@ -37,8 +37,8 @@
         </div>
       </div>
       <div class="col-md-4">
-        <img src="{% cropped_thumbnail article "default_cropping" %}">
-        {% comment %} <img src="{{ article.image.url }}" class="card-img" alt="..." /> {% endcomment %}
+        {% comment %} <img src="{% cropped_thumbnail article "default_cropping" %}"> {% endcomment %}
+        <img src="{{ article.image_thumbnail.url }}" class="card-img" alt="..." />
       </div>
     </div>
   </div>

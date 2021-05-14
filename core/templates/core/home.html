@@ -49,8 +49,8 @@
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <img src="{% cropped_thumbnail first "default_cropping" %}">
-                    {% comment %} <img src="{{ first.image.url }}" class="card-img" alt="..."> {% endcomment %}
+                    {% comment %} <img src="{% cropped_thumbnail first "default_cropping" %}"> {% endcomment %}
+                    <img src="{{ first.image_thumbnail.url }}" class="card-img" alt="...">
                 </div>
             </div>
         </div>
@@ -61,8 +61,9 @@
             {% for item in triple %}
             <div class="col-md-4">
                 <div class="card shadow-sm">
-                    <img src="{% cropped_thumbnail item "default_cropping" %}">
+                    {% comment %} <img src="{% cropped_thumbnail item "default_cropping" %}"> {% endcomment %}
                     {% comment %} <img src="{{ item.image.url }}" class="card-img-top" alt="..."> {% endcomment %}
+                    <img src="{{ item.image_thumbnail.url }}" class="card-img-top" alt="...">
                     <div class="card-body">
                         <h4 class="card-title font-weight-bold">{{ item.title }}</h4> 
                         <p class="card-text">{{ item.content|slice:":75"|safe_markdown }}</p>
@@ -102,8 +103,8 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <img src="{% cropped_thumbnail last "default_cropping" %}">
-                {% comment %} <img src="{{ last.image.url }}" class="card-img" alt="..."> {% endcomment %}
+                {% comment %} <img src="{% cropped_thumbnail last "default_cropping" %}"> {% endcomment %}
+                <img src="{{ last.image.url }}" class="card-img" alt="...">
             </div>
         </div>
         <a class="btn btn-more float-end text-light mb-5"href="{% url "article-list" %}">See more <i class="ri-arrow-down-circle-fill"></i></a>

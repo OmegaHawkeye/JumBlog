@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import (
     ListView,
@@ -7,6 +7,7 @@ from django.views.generic import (
     UpdateView,
     DeleteView
 )
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.urls import reverse
@@ -15,6 +16,10 @@ from django.db.models import Q
 
 def handler404(request,exception):
     return render(request, 'error/404.html', {"exception":exception,"request":request}, status=404)
+
+    
+def handler500(request):
+    return render(request, 'error/500.html', {"request":request}, status=500)
 
 def LikeView(request,pk):
     article = get_object_or_404(Article,id=request.POST.get("article_id"))
@@ -25,7 +30,6 @@ def LikeView(request,pk):
         article.liked.add(request.user)
         liked=True
     return HttpResponseRedirect(reverse("article-detail",args=[str(pk)]))
-
 
 def BookmarkView(request,pk):
     article = get_object_or_404(Article,id=request.POST.get("article_id"))
@@ -40,6 +44,9 @@ def BookmarkView(request,pk):
     return HttpResponseRedirect(reverse("article-detail",args=[str(pk)]))
 
 def landing(request):
+    if request.user.is_authenticated:
+        messages.success(request, f'''You have been redirected since your already logged in''')
+        return redirect("home")
     return render(request,"core/landing.html")
 
 @login_required
@@ -64,20 +71,10 @@ class CategoryListView(LoginRequiredMixin,ListView):
     template_name = 'article/categorized_article_list.html'
     context_object_name = 'categorized_articles'
     ordering = ['-created_at']
-    paginate_by = 5
+    paginate_by = 20
 
     def get_queryset(self):
         return Article.objects.filter(category=self.kwargs.get("category"))
-
-class ArticleListView(LoginRequiredMixin,ListView):
-    model = Article
-    template_name = 'article/article_list.html'
-    context_object_name = 'articles'
-    ordering = ['-created_at']
-    paginate_by = 3
-
-    def get_queryset(self):
-        return Article.objects.filter(published=True)
 
 class DraftedArticleListView(LoginRequiredMixin,ListView):
     model = Article
@@ -109,6 +106,25 @@ class UserArticleListView(LoginRequiredMixin,ListView):
     def get_queryset(self):
         return Article.objects.filter(author=self.request.user)
 
+class ArticleListView(LoginRequiredMixin,ListView):
+    model = Article
+    template_name = 'article/article_list.html'
+    context_object_name = 'articles'
+    ordering = ['-created_at']
+    paginate_by = 20
+
+    def get_queryset(self):
+        return Article.objects.filter(published=True)
+
+class ArticleCreateView(LoginRequiredMixin, CreateView):
+    model = Article
+    template_name = "article/article_create.html"
+    fields = ['image','title','subtitle','content','tags','category','published','allow_comments']
+    success_url = "/articles/"
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
 
 class ArticleDetailView(LoginRequiredMixin,DetailView):
     model = Article
@@ -128,16 +144,6 @@ class ArticleDetailView(LoginRequiredMixin,DetailView):
         context["liked"] = liked
         context["bookmarked"] = bookmarked
         return context
-
-class ArticleCreateView(LoginRequiredMixin, CreateView):
-    model = Article
-    template_name = "article/article_create.html"
-    fields = ['image','title','subtitle','content','tags','category','published','allow_comments']
-    success_url = "/articles/"
-
-    def form_valid(self, form):
-        form.instance.author = self.request.user
-        return super().form_valid(form)
 
 class ArticleUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Article
