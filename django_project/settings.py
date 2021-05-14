@@ -19,7 +19,7 @@ ADMINS = [('Julian Chornitzer','chornitzerj@gmail.com')]
 # ALLOWED_HOSTS = ['127.0.0.1', 'jumblog.herokuapp.com']
 
 INSTALLED_APPS = [
-    # 'whitenoise.runserver_nostatic',
+    'whitenoise.runserver_nostatic',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -195,7 +195,7 @@ else:
     STATIC_URL = '/static/'
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
     # STATIC_URL = AWS_URL + '/static/'
-    # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
     # STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
     MEDIA_URL = AWS_URL + '/media/'
     DEFAULT_FILE_STORAGE = 'django_project.storage_backends.MediaStorage'
