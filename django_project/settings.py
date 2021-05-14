@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'core',
     'users.apps.UsersConfig',
+    'support',
     'crispy_forms',
     'crispy_bootstrap5',
     'django_email_verification',
@@ -40,13 +41,11 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.linkedin',
     'debug_toolbar',
-    # "rest_framework",
     'martor',
     'taggit',
     'django_comments_xtd',
     'django_comments',
-    # 'easy_thumbnails',
-    # 'image_cropping',
+    'bootstrap_datepicker_plus',
     'imagekit',
 ]
 
@@ -99,15 +98,21 @@ if DEBUG:
 else:
     DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME':  "heroku_c1c7c1e1707e83e",
-        'USER':   "b924bf1df94fa3",
-        'PASSWORD': "2297439e",
-        'HOST':  "eu-cdbr-west-01.cleardb.com",
-        'PORT': '3306',
-        'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
-            }
+        # 'ENGINE': 'django.db.backends.mysql',
+        # 'NAME':  "heroku_c1c7c1e1707e83e",
+        # 'USER':   "b924bf1df94fa3",
+        # 'PASSWORD': "2297439e",
+        # 'HOST':  "eu-cdbr-west-01.cleardb.com",
+        # 'PORT': '3306',
+        # 'OPTIONS': {
+        #     'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
+        #     }
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME':  "d32c2lrrbe2a3g",
+        'USER':   "dkepjptgunkgri",
+        'PASSWORD': "825f4a274a36a5d574cd2a4b87893ee3eb431ecbe3ef7f7124b48a3d171198ea",
+        'HOST':  "ec2-34-254-69-72.eu-west-1.compute.amazonaws.com",
+        'PORT': '5432'
         }   
     }    
 
@@ -139,6 +144,10 @@ USE_TZ = True
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
+
+BOOTSTRAP4 = {
+    'include_jquery': False,
+}
 
 LOGIN_REDIRECT_URL = 'home'
 LOGIN_URL = 'login'
@@ -230,7 +239,11 @@ MARTOR_ALTERNATIVE_CSS_FILE_THEME = "css/main.css"
 # CSRF_COOKIE_HTTPONLY = False
 
 COMMENTS_APP = 'django_comments_xtd'
-COMMENTS_XTD_MAX_THREAD_LEVEL = 2
+COMMENTS_XTD_MAX_THREAD_LEVEL_BY_APP_MODEL = {
+        'core.article': 2,
+        'support.ticket':0
+}
+# COMMENTS_XTD_MAX_THREAD_LEVEL = 2
 COMMENTS_XTD_CONFIRM_EMAIL = True
 
 COMMENTS_XTD_APP_MODEL_OPTIONS = {
@@ -242,9 +255,9 @@ COMMENTS_XTD_APP_MODEL_OPTIONS = {
     }
 }
 
-from easy_thumbnails.conf import Settings as thumbnail_settings
+# from easy_thumbnails.conf import Settings as thumbnail_settings
 
-THUMBNAIL_PROCESSORS = (
-    'image_cropping.thumbnail_processors.crop_corners',
-) + thumbnail_settings.THUMBNAIL_PROCESSORS
+# THUMBNAIL_PROCESSORS = (
+#     'image_cropping.thumbnail_processors.crop_corners',
+# ) + thumbnail_settings.THUMBNAIL_PROCESSORS
 

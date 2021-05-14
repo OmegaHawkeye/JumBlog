@@ -11,8 +11,9 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from .models import Article
+from .models import Article, Task
 from django.db.models import Q
+from bootstrap_datepicker_plus import DateTimePickerInput
 
 def handler404(request,exception):
     return render(request, 'error/404.html', {"exception":exception,"request":request}, status=404)
@@ -45,7 +46,7 @@ def BookmarkView(request,pk):
 
 def landing(request):
     if request.user.is_authenticated:
-        messages.success(request, f'''You have been redirected since your already logged in''')
+        messages.success(request, f'''You have been redirected since you are already logged in''')
         return redirect("home")
     return render(request,"core/landing.html")
 
@@ -172,6 +173,74 @@ class ArticleDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         article = self.get_object()
         if self.request.user == article.author:
+            return True
+        return False
+
+
+class TaskListView(LoginRequiredMixin,ListView):
+    model = Task
+    template_name = 'tasks/tasks_list.html'
+    context_object_name = 'tasks'
+    ordering = ['-created_at']
+    paginate_by = 20
+
+    def get_queryset(self):
+        return Task.objects.filter(completed=False)
+
+class TaskCreateView(LoginRequiredMixin, CreateView):
+    model = Task
+    template_name = "tasks/task_create.html"
+    fields = ['title','content',"start","end"]
+    success_url = "/tasks/"
+
+    def get_form(self):
+        form = super().get_form()
+        form.fields["start"].widget = DateTimePickerInput()
+        form.fields["end"].widget = DateTimePickerInput()
+        return form
+
+    def form_valid(self, form):
+        form.instance.creator = self.request.user
+        return super().form_valid(form)
+
+class TaskDetailView(LoginRequiredMixin,DetailView):
+    model = Task
+    template_name = "tasks/task_detail.html"
+    context_object_name = "task"
+
+class TaskUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Task
+    fields = ['title','content',"start","end"]
+    template_name = "tasks/task_update.html"
+    # success_url = '/Tasks/'
+
+    def get_form(self):
+        form = super().get_form()
+        form.fields["start"].widget = DateTimePickerInput()
+        form.fields["end"].widget = DateTimePickerInput()
+        return form
+
+    def get_success_url(self):
+        return reverse('task-detail', kwargs={'pk': self.object.id})
+
+    def form_valid(self, form):
+        form.instance.creator = self.request.user
+        return super().form_valid(form)
+
+    def test_func(self):
+        task = self.get_object()
+        if self.request.user == task.creator:
+            return True
+        return False
+
+class TaskDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Task
+    success_url = '/Tasks/'
+    template_name = "tasks/task_confirm_delete.html"
+
+    def test_func(self):
+        task = self.get_object()
+        if self.request.user == task.creator:
             return True
         return False
 

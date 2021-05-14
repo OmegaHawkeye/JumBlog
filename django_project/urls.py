@@ -22,6 +22,7 @@ urlpatterns = [
     path('__debug__/', include(debug_toolbar.urls)),
     path('martor/', include('martor.urls')),
     path('comments/', include('django_comments_xtd.urls')),
+    path('support/', include('support.urls')),
 ]
 
 if settings.DEBUG:

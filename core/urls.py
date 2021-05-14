@@ -5,6 +5,7 @@ urlpatterns = [
     path("",landing,name="landing"),
     path("home/",home,name="home"),
     path("search/", SearchResultView.as_view(), name="search"),
+    
     path("articles/bookmarked",BookmarkedArticleListView.as_view(),name="bookmarked-article-list"),
     path("articles/categorized/<str:category>/",CategoryListView.as_view(),name="categorized-article-list"),
     path("articles/user/",UserArticleListView.as_view(),name="user-articles-list"),
@@ -19,4 +20,10 @@ urlpatterns = [
     path("like/<int:pk>/",LikeView,name="like-article"),
     path("create/article/",CreateArticle.as_view(),name="create-article"),
     
+    path("tasks/",TaskListView.as_view(),name="task-list"),
+    path("task/create/",TaskCreateView.as_view(),name="task-create"),
+    path("task/<int:pk>/detail/",TaskDetailView.as_view(),name="task-detail"),
+    path("task/<int:pk>/update/",TaskUpdateView.as_view(),name="task-update"),
+    path("task/<int:pk>/delete/",TaskDeleteView.as_view(),name="task-delete"),
+
 ]

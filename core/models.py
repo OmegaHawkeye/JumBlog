@@ -5,9 +5,10 @@ from taggit.managers import TaggableManager
 from django_comments.moderation import CommentModerator
 from django_comments_xtd.moderation import moderator
 from martor.models import MartorField
-# from image_cropping import ImageRatioField,ImageCropField
-from imagekit.models import ImageSpecField ,ProcessedImageField
+from imagekit.models import ImageSpecField 
 from imagekit.processors import ResizeToFill
+import datetime
+import pytz
 
 CATEGORY_CHOICES = (
     ('WebDevelopment','Web Development'),
@@ -24,9 +25,6 @@ class Article(models.Model):
     author = models.ForeignKey(User,on_delete=models.CASCADE)
     content = MartorField()
     image = models.ImageField(blank=True,upload_to="article_pics/")
-    # image = ImageCropField(blank=True,upload_to="article_pics/")
-    # default_cropping = ImageRatioField('image', '400x400')
-    # image = ProcessedImageField(blank=True,upload_to='article_pics/',processors=[ResizeToFill(400,400)],format='JPEG', options={'quality': 60})
     image_thumbnail = ImageSpecField(source='image',processors=[ResizeToFill(400,400)],format='JPEG', options={'quality': 60})
     category = models.CharField(max_length=155,choices=CATEGORY_CHOICES,null=True,blank=True)
     tags = TaggableManager()
@@ -48,5 +46,30 @@ class ArticleCommentModerator(CommentModerator):
     auto_moderate_field = 'created_at'
     moderate_after = 365
 
-
 moderator.register(Article, ArticleCommentModerator)
+
+class Task(models.Model):
+    title = models.CharField(max_length=255)
+    creator = models.ForeignKey(User,on_delete=models.CASCADE)
+    content = models.TextField(max_length=500)
+    start = models.DateTimeField()
+    end = models.DateTimeField()
+    completed = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+    def __str__(self):
+        return f'{self.title} created by {self.creator}'
+
+    def get_absolute_url(self):
+        return reverse('task-detail', kwargs={'pk': self.pk})
+
+    @property
+    def getStatus(self):
+        if self.completed == False and ((self.end - datetime.datetime.now(tz=pytz.UTC)) > datetime.timedelta(seconds=1)):
+            return "Uncompleted"
+        elif self.completed == False and (self.end - datetime.datetime.now(tz=pytz.UTC)) < datetime.timedelta(seconds=1):
+            return "Outdated"
+        else:
+            return "Completed"
+
