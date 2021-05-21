@@ -226,7 +226,7 @@ MARTOR_ENABLE_LABEL = True
 MARTOR_MARKDOWN_BASE_MENTION_URL = 'http://jumblog.herokuapp.com/' 
 
 # MARTOR_ALTERNATIVE_JS_FILE_THEME = "js/bootstrap.bundle.min.js"
-MARTOR_ALTERNATIVE_CSS_FILE_THEME = "css/main.css"
+MARTOR_ALTERNATIVE_CSS_FILE_THEME = "css/main2.css"
 
 # CSRF_COOKIE_HTTPONLY = False
 
