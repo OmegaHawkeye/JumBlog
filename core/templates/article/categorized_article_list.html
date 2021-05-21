@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% load martortags %}
-{% comment %} {% load cropping %} {% endcomment %}
 
 {% block title %}List of all Articles but Categorized{% endblock title %}
 
@@ -32,7 +31,6 @@
         </div>
       </div>
       <div class="col-md-4">
-        {% comment %} <img src="{% cropped_thumbnail categorized_article "default_cropping" %}"> {% endcomment %}
         <img src="{{ categorized_article.image_thumbnail.url }}" class="card-img" alt="..." />
       </div>
     </div>

@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% load martortags %}
-{% comment %} {% load cropping %} {% endcomment %}
 
 {% block title %}Search Results{% endblock title %}
 
@@ -31,7 +30,6 @@
           </div>
         </div>
         <div class="col-md-4">
-          {% comment %} <img src="{% cropped_thumbnail result "default_cropping" %}"> {% endcomment %}
           <img src="{{ result.image_thumbnail.url }}" class="card-img" alt="..." />
         </div>
       </div>

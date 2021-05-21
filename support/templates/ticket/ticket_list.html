@@ -61,6 +61,9 @@
 </table>
 
 
+<a class="btn btn-more float-end text-light mb-5" href="{% url 'ticket-create' %}"><i class="bi bi-plus-square"></i> Create Ticket</a>
+
+
 {% if is_paginated %}
   <div class="container">
     {% if page_obj.has_previous %}

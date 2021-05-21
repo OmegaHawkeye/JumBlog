@@ -4,7 +4,6 @@
 {% load comments %}
 {% load comments_xtd %}
 {% load martortags %}
-{% comment %} {% load cropping %} {% endcomment %}
 
 {% block title %} Detail Page of an Article{% endblock title %}
 
@@ -14,13 +13,10 @@
 
 {% block content %}
 
-{% comment %} <div class="article-section mt-4"> {% endcomment %}
-    <div class="container my-3">
-        {% comment %} <img src="{% cropped_thumbnail article "default_cropping" %}" class="mx-auto d-flex"> {% endcomment %}
-        {% comment %} <img src="{{article.image.url}}" class="img-fluid"> {% endcomment %}
-        <img src="{{article.image_thumbnail.url}}" class="mx-auto d-flex">
-    </div>
-{% comment %} </div> {% endcomment %}
+<div class="container my-3">
+    <img src="{{article.image_thumbnail.url}}" class="mx-auto d-flex">
+</div>
+
 <div class="container my-4">
     <h1 class="font-weight-bold">{{ article.title }}</h1>
     <div class="span">
@@ -60,7 +56,7 @@
     </div>
     {% if comment_count %}
      <ul class="media-list">
-        {% render_xtdcomment_tree for article %}
+        {% render_xtdcomment_tree for article allow_flagging allow_feedback show_feedback %}
     </ul>
     {% endif %}
 

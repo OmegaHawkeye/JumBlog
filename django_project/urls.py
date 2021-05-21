@@ -13,8 +13,8 @@ sitemaps = {
 }
 
 urlpatterns = [
-    path('sitemap.xml',sitemap,{'sitemaps':sitemaps},name="sitemap"),
-    path('admin/', admin.site.urls),
+    path('secret/', admin.site.urls),
+    path('admin/',include('admin_honeypot.urls',namespace='admin_honeypot')),
     path("accounts/", include('users.urls')),
     path('email/', include(email_urls)),
     path('', include('core.urls')),
@@ -23,6 +23,7 @@ urlpatterns = [
     path('martor/', include('martor.urls')),
     path('comments/', include('django_comments_xtd.urls')),
     path('support/', include('support.urls')),
+    path('sitemap.xml',sitemap,{'sitemaps':sitemaps},name="sitemap"),
 ]
 
 if settings.DEBUG:

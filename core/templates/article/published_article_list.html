@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% load martortags %}
-{% comment %} {% load cropping %} {% endcomment %}
 
 {% block title %}List all published Articles from U{% endblock title %}
 
@@ -38,7 +37,6 @@
       </div>
       <div class="col-md-4">
         <img src="{{ article.image_thumbnail.url }}" class="card-img" alt="..." />
-        {% comment %} <img src="{% cropped_thumbnail article "default_cropping" %}"> {% endcomment %}
       </div>
     </div>
   </div>

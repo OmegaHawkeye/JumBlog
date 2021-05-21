@@ -1,6 +1,8 @@
 import os
 from pathlib import Path
 from decouple import config
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -10,11 +12,9 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
-MANAGERS = (
-    ('Julian Chornitzer', 'chornitzerj@gmail.com'),
-)
-
 ADMINS = [('Julian Chornitzer','chornitzerj@gmail.com')]
+
+MANAGERS = ADMINS
 
 # ALLOWED_HOSTS = ['127.0.0.1', 'jumblog.herokuapp.com']
 
@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django_comments',
     'bootstrap_datepicker_plus',
     'imagekit',
+    'admin_honeypot',
 ]
 
 if DEBUG:
@@ -98,15 +99,6 @@ if DEBUG:
 else:
     DATABASES = {
     'default': {
-        # 'ENGINE': 'django.db.backends.mysql',
-        # 'NAME':  "heroku_c1c7c1e1707e83e",
-        # 'USER':   "b924bf1df94fa3",
-        # 'PASSWORD': "2297439e",
-        # 'HOST':  "eu-cdbr-west-01.cleardb.com",
-        # 'PORT': '3306',
-        # 'OPTIONS': {
-        #     'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
-        #     }
         'ENGINE': 'django.db.backends.postgresql',
         'NAME':  "d32c2lrrbe2a3g",
         'USER':   "dkepjptgunkgri",
@@ -240,24 +232,28 @@ MARTOR_ALTERNATIVE_CSS_FILE_THEME = "css/main.css"
 
 COMMENTS_APP = 'django_comments_xtd'
 COMMENTS_XTD_MAX_THREAD_LEVEL_BY_APP_MODEL = {
-        'core.article': 2,
-        'support.ticket':0
+        'core.article': 4,
+        'support.ticket':3
 }
+
 # COMMENTS_XTD_MAX_THREAD_LEVEL = 2
+
 COMMENTS_XTD_CONFIRM_EMAIL = True
 
 COMMENTS_XTD_APP_MODEL_OPTIONS = {
     'default': {
-        'allow_flagging': False,
-        'allow_feedback': False,
-        'show_feedback': False,
+        'allow_flagging': True,
+        'allow_feedback': True,
+        'show_feedback': True,
         'who_can_post': 'users'  # Valid values: 'all', users'
     }
 }
 
-# from easy_thumbnails.conf import Settings as thumbnail_settings
 
-# THUMBNAIL_PROCESSORS = (
-#     'image_cropping.thumbnail_processors.crop_corners',
-# ) + thumbnail_settings.THUMBNAIL_PROCESSORS
-
+if not DEBUG:
+    sentry_sdk.init(
+        dsn="https://1a2e1aa0d04441c79ec2bbb5110e508e@o545053.ingest.sentry.io/5672333",
+        integrations=[DjangoIntegration()],
+        traces_sample_rate=0.5,
+        send_default_pii=True
+    )

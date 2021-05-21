@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% load martortags %}
-{% comment %} {% load cropping %} {% endcomment %}
 
 {% block title %} List all bookmarked Articles {%endblock title %} 
 
@@ -32,12 +31,13 @@
   {% for bookmarked_article in bookmarked_articles %}
     <div class="col-md-4 my-3">
       <div class="card shadow-sm">
-        {% comment %} <img src="{% cropped_thumbnail bookmarked_article "default_cropping" %}"> {% endcomment %}
         <img src="{{ bookmarked_article.image_thumbnail.url }}" class="card-img-top" alt="..." />
         <div class="card-body">
           <h4 class="card-title font-weight-bold">{{bookmarked_article.title}}</h4>
           <p class="card-text">{{bookmarked_article.content|slice:":150"|safe_markdown}}</p>
-          <a href="{{ bookmarked_article.get_absolute_url }}" class="btn btn-link float-end text-dark font-weight-bold">Read more</a>
+        </div>
+        <div class="card-footer">
+          <a href="{{ bookmarked_article.get_absolute_url }}" class="btn btn-link text-uppercase text-dark nav-link fw-bold">Read more</a>
         </div>
       </div>
     </div>

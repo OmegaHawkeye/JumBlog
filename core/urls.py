@@ -18,12 +18,10 @@ urlpatterns = [
     path("article/<int:pk>/delete/",ArticleDeleteView.as_view(),name="article-delete"),
     path("bookmark/<int:pk>/",BookmarkView,name="bookmark-article"),
     path("like/<int:pk>/",LikeView,name="like-article"),
-    path("create/article/",CreateArticle.as_view(),name="create-article"),
     
     path("tasks/",TaskListView.as_view(),name="task-list"),
     path("task/create/",TaskCreateView.as_view(),name="task-create"),
     path("task/<int:pk>/detail/",TaskDetailView.as_view(),name="task-detail"),
     path("task/<int:pk>/update/",TaskUpdateView.as_view(),name="task-update"),
     path("task/<int:pk>/delete/",TaskDeleteView.as_view(),name="task-delete"),
-
 ]

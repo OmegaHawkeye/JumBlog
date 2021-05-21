@@ -260,15 +260,3 @@ class SearchResultView(ListView):
         ).distinct()
         return object_list
 
-
-class CreateArticle(LoginRequiredMixin,CreateView):
-    model = Article
-    template_name = "article/writeArticle.html"
-    fields = ['image','title','subtitle','content','category','tags']
-    success_url = "/articles/"
-
-    def form_valid(self, form):
-        form.instance.author = self.request.user
-        return super().form_valid(form)
-
-

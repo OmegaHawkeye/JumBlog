@@ -20,16 +20,16 @@
       </tr>
     </thead>
   <tbody>
+    {% for ticket in tickets %}
       <tr>
-        {% for ticket in tickets %}
-          <th><a href="{{ticket.get_absolute_url}}">{{ticket.pk}}</a></th>
-          <td>{{ticket.supporter}}</td>
-          <td>{{ticket.creator}}</td>
-          <td>{{ticket.status}}</td>
-          <td>{{ticket.created_at}}</td>
-          <td>{{ticket.updated_at}}</td>
-        {% endfor %}
+        <th><a href="{{ticket.get_absolute_url}}">{{ticket.pk}}</a></th>
+        <td>{{ticket.supporter}}</td>
+        <td>{{ticket.creator}}</td>
+        <td>{{ticket.status}}</td>
+        <td>{{ticket.created_at}}</td>
+        <td>{{ticket.updated_at}}</td>
       </tr>
+    {% endfor %}
   </tbody>
 </table>
 

@@ -1,4 +1,4 @@
-from .mixins import SuperuserRequiredMixin
+from .mixins import StaffRequiredMixin
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import (
@@ -26,7 +26,7 @@ class TicketListView(LoginRequiredMixin,ListView):
         return context
 
 
-class SupporterTicketListView(SuperuserRequiredMixin,LoginRequiredMixin,ListView):
+class SupporterTicketListView(StaffRequiredMixin,LoginRequiredMixin,ListView):
     model = Ticket
     template_name = 'ticket/supporter_ticket_list.html'
     context_object_name = 'tickets'

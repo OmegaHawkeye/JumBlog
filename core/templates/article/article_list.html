@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% load martortags %}
-{% comment %} {% load cropping %} {% endcomment %}
 
 {% block title %}List all Articles{% endblock title %}
 
@@ -24,7 +23,7 @@
             {{article.content|safe_markdown|slice:":150"}}
           </p>
           {% for tag in article.tags.all %}
-            <span class="badge badge-pill badge-primary">{{tag}}</span>
+            <span class="badge rounded-pill bg-primary"> {{tag}}</span>
           {% endfor %} 
           <p class="card-text mt-3">
             <small class="text-dark">Category: {{article.category}}</small>
@@ -41,7 +40,6 @@
       </div>
       <div class="col-md-4">
         <img src="{{article.image_thumbnail.url}}" class="card-img" alt="..." />
-        {% comment %} <img src="{% cropped_thumbnail article "default_cropping" %}"> {% endcomment %}
       </div>
     </div>
   </div>
