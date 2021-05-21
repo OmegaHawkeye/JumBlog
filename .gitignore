@@ -2,7 +2,6 @@ history
 __pycache__ 
 .vscode
 venv
-staticfiles
 .env
 landing page
 login
