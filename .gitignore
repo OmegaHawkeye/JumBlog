@@ -6,3 +6,5 @@ staticfiles
 .env
 landing page
 login
+staticfiles
+default_query.sql
