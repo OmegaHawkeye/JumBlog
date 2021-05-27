@@ -10,4 +10,6 @@ urlpatterns = [
     path("ticket/<int:pk>/delete/",TicketDeleteView.as_view(),name="ticket-delete"),
 
     path("tickets/supporter",SupporterTicketListView.as_view(),name="supporter-ticket-list"),
+
+    path("contactus/",ContactUs.as_view(),name="contact-us"),
 ]

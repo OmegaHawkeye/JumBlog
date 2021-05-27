@@ -1,3 +1,4 @@
+from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import (
@@ -22,15 +23,35 @@ def handler404(request,exception):
 def handler500(request):
     return render(request, 'error/500.html', {"request":request}, status=500)
 
-def LikeView(request,pk):
-    article = get_object_or_404(Article,id=request.POST.get("article_id"))
-    if article.liked.filter(id=request.user.id).exists():
-        article.liked.remove(request.user)
-        liked=False
-    else:
-        article.liked.add(request.user)
-        liked=True
-    return HttpResponseRedirect(reverse("article-detail",args=[str(pk)]))
+# def LikeView(request,pk):
+#     article = get_object_or_404(Article,id=request.POST.get("article_id"))
+#     if article.liked.filter(id=request.user.id).exists():
+#         article.liked.remove(request.user)
+#         article.save()
+#         liked=False
+#     else:
+#         article.liked.add(request.user)
+#         article.save()
+#         liked=True
+#     return HttpResponseRedirect(reverse("article-detail",args=[str(pk)]))
+
+
+def LikeView(request):
+    if request.POST.get("action") == "post":
+    
+        article_id = int(request.POST.get("article_id"))
+        article = get_object_or_404(Article,id=article_id)
+        
+        if article.likes.filter(id=request.user.id).exists():
+            article.likes.remove(request.user)
+            article.likes_counter -= 1
+            article.save()
+        else:
+            article.likes.add(request.user)
+            article.likes_counter += 1
+            article.save()
+        return JsonResponse({"total_likes": article.likes_counter})
+    return HttpResponse("Error. Access Denied")
 
 def BookmarkView(request,pk):
     article = get_object_or_404(Article,id=request.POST.get("article_id"))

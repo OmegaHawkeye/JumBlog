@@ -31,7 +31,8 @@ class Article(models.Model):
     bookmarked= models.BooleanField(default=False)
     allow_comments = models.BooleanField(default=True)
     published = models.BooleanField(default=True)
-    liked = models.ManyToManyField(User,related_name="article_likes",blank=True)
+    likes = models.ManyToManyField(User,related_name="article_likes",blank=True)
+    likes_counter = models.PositiveIntegerField(default=0)
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -40,6 +41,10 @@ class Article(models.Model):
 
     def get_absolute_url(self):
         return reverse('article-detail', kwargs={'pk': self.pk})
+    
+    @property
+    def total_likes(self):
+        return self.likes.count()
 
 class ArticleCommentModerator(CommentModerator):
     email_notification = True

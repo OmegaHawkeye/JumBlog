@@ -1,3 +1,4 @@
+from support.forms import ContactUsForm
 from .mixins import StaffRequiredMixin
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -8,11 +9,25 @@ from django.views.generic import (
     UpdateView,
     DeleteView
 )
-from .models import Ticket
+from .models import Ticket,ContactUs
+
+class ContactUs(CreateView):
+    model = ContactUs
+    template_name = "support/contact_us.html"
+    form_class = ContactUsForm
+    success_url = "/landing/"
+
+    def get_form_kwargs(self):
+        kwargs = super(ContactUs, self).get_form_kwargs()
+        kwargs.update({'user': self.request.user})
+        return kwargs
+
+    def get_success_url(self):
+        return reverse('landing')
 
 class TicketListView(LoginRequiredMixin,ListView):
     model = Ticket
-    template_name = 'ticket/ticket_list.html'
+    template_name = 'support/ticket_list.html'
     ordering = ['-created_at']
     paginate_by = 20
 
@@ -28,7 +43,7 @@ class TicketListView(LoginRequiredMixin,ListView):
 
 class SupporterTicketListView(StaffRequiredMixin,LoginRequiredMixin,ListView):
     model = Ticket
-    template_name = 'ticket/supporter_ticket_list.html'
+    template_name = 'support/supporter_ticket_list.html'
     context_object_name = 'tickets'
     ordering = ['-created_at']
     paginate_by = 20
@@ -38,7 +53,7 @@ class SupporterTicketListView(StaffRequiredMixin,LoginRequiredMixin,ListView):
 
 class TicketCreateView(LoginRequiredMixin, CreateView):
     model = Ticket
-    template_name = "ticket/ticket_create.html"
+    template_name = "support/ticket_create.html"
     fields = ['title','content']
 
     def get_success_url(self):
@@ -50,13 +65,13 @@ class TicketCreateView(LoginRequiredMixin, CreateView):
 
 class TicketDetailView(LoginRequiredMixin,DetailView):
     model = Ticket
-    template_name = "ticket/ticket_detail.html"
+    template_name = "support/ticket_detail.html"
     context_object_name = "ticket"
 
 class TicketUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Ticket
     fields = ['supporter','status']
-    template_name = "ticket/ticket_update.html"
+    template_name = "support/ticket_update.html"
 
     def get_success_url(self):
         return reverse('ticket-detail', kwargs={'pk': self.object.id})
@@ -73,7 +88,7 @@ class TicketUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 class TicketDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Ticket
     success_url = '/tickets/'
-    template_name = "ticket/ticket_confirm_delete.html"
+    template_name = "support/ticket_confirm_delete.html"
 
     def test_func(self):
         ticket = self.get_object()

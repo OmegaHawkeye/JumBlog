@@ -29,6 +29,9 @@
     <!-- Remixicon -->
     <link href="https://cdn.jsdelivr.net/npm/remixicon@2.4.0/fonts/remixicon.css" rel="stylesheet">
 
+    <!-- Feedback CSS -->
+    <link href="{% static 'tellme/feedback/feedback.css' %}" rel="stylesheet">
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 
@@ -113,19 +116,22 @@
             </div>
         {% endif %}
         {% block content %}{% endblock content %} 
+        <button type="button" id="feedback-btn" class="btn btn-info vertical-right-aligned"><i class="bi bi-megaphone"></i> Feedback</button>
+ 
     </div>
     {% include 'core/footer.html'%}
+    {%  include 'tellme/js_inc.html' %}
 </body>
 
-{% comment %} <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script> {% endcomment %}
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script>
 
+<script src="{% static 'tellme/feedback/feedback.js' %}"></script>
 
 <script>
     //AOS.init();
     var scrollSpy = new bootstrap.ScrollSpy(document.body, {
         target: '#navbar-scroll'
-    })
+    });
 </script>
 
 </html>

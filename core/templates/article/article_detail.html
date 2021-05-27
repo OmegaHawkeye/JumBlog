@@ -30,7 +30,7 @@
     <hr>
     <p>{{ article.content|safe_markdown }}</p>
     
-<div class="d-flex flex-row">
+{% comment %} <div class="d-flex flex-row">
     <form action="{% url 'like-article' article.id %}" method="post">
         {% csrf_token %}
         {% if liked %}
@@ -47,7 +47,7 @@
             <button type="submit" name="article_id" value="{{article.id}}" class="btn btn-secondary btn-sm my-3 mx-3"><i class="bi bi-bookmark"></i></button>
         {% endif %}
     </form>
-</div>
+</div> {% endcomment %}
 
 {% if article.allow_comments %}
     {% get_comment_count for article as comment_count %}

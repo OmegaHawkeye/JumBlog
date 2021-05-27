@@ -8,7 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'm5zywpxsl+tu8$2d(u4_utr+v%)nvii94fc+hj2ixnfr4uwv0w'
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     'bootstrap_datepicker_plus',
     'imagekit',
     'admin_honeypot',
+    'django_extensions',
+    'tellme',
 ]
 
 if DEBUG:
@@ -252,8 +254,13 @@ COMMENTS_XTD_APP_MODEL_OPTIONS = {
 
 if not DEBUG:
     sentry_sdk.init(
-        dsn="https://1a2e1aa0d04441c79ec2bbb5110e508e@o545053.ingest.sentry.io/5672333",
+        dsn="https://ce06e5a7f9724d19a0456894c7341117@o545053.ingest.sentry.io/5777662",
         integrations=[DjangoIntegration()],
         traces_sample_rate=0.5,
         send_default_pii=True
-    )
+)
+
+GRAPH_MODELS = {
+  'all_applications': True,
+  'group_models': True,
+}

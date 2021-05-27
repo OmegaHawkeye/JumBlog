@@ -23,6 +23,7 @@ urlpatterns = [
     path('martor/', include('martor.urls')),
     path('comments/', include('django_comments_xtd.urls')),
     path('support/', include('support.urls')),
+    path('tellme/', include("tellme.urls")),
     path('sitemap.xml',sitemap,{'sitemaps':sitemaps},name="sitemap"),
 ]
 

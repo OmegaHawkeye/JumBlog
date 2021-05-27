@@ -455,3 +455,8 @@ h6,
   margin: 4rem auto;
   height: auto;
 }
+
+.marked-emoji{
+  height: 75px;
+  width:75px;
+}

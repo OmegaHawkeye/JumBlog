@@ -9,7 +9,6 @@
 {% endblock extrahead %}
 
 {% block content %}
-
     {% if not user.is_authenticated%}
     <!-- NAVIGATION END -->
     <div class="head-section">
@@ -97,5 +96,27 @@
     </div>
     {% endif %}
 
+    <script>
+    $(document).on('click','#like-btn', function(e){
+        e.preventDefault();
+        $.ajax({
+        type: 'POST',
+        url : "{% url 'like-article' %}",
+        data: {
+            articleID: $('#like-btn').val(),
+            csrfmiddlewaretoken: $('input[csrfmiddlewaretoken]').val(),
+            action: "post"
+        },
+        success: function(json){
+            document.getElementById("likedCounter").innerHTML = json["result"]
+            console.log(json)
+        },
+        error: function(xhr,errmsg,err){
+            alert("There is an error");
+            console.log(err);
+        }
+        });
+    })
+    </script>
 
 {% endblock content %}
