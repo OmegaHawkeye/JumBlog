@@ -1,6 +1,7 @@
 from django.urls import reverse
 from django.db import models
 from django.contrib.auth.models import User
+from imagekit.models.fields import ProcessedImageField
 from taggit.managers import TaggableManager
 from django_comments.moderation import CommentModerator
 from django_comments_xtd.moderation import moderator
@@ -24,8 +25,9 @@ class Article(models.Model):
     subtitle = models.CharField(max_length=100,null=True,blank=True)
     author = models.ForeignKey(User,on_delete=models.CASCADE)
     content = MartorField()
-    image = models.ImageField(blank=True,upload_to="article_pics/")
-    image_thumbnail = ImageSpecField(source='image',processors=[ResizeToFill(400,400)],format='JPEG', options={'quality': 60})
+    # image = models.ImageField(blank=True,upload_to="article_pics/")
+    # image_detail = ProcessedImageField(blank=True,upload_to="article_pics/",processors=[ResizeToFill(600,400)],format="JPEG",options={"quality":80})
+    image_thumbnail = ProcessedImageField(blank=True,upload_to="article_pics/",processors=[ResizeToFill(400,400)],format='JPEG', options={'quality': 80})
     category = models.CharField(max_length=155,choices=CATEGORY_CHOICES,null=True,blank=True)
     tags = TaggableManager()
     bookmarked= models.BooleanField(default=False)
@@ -45,6 +47,13 @@ class Article(models.Model):
     @property
     def total_likes(self):
         return self.likes.count()
+
+    @property
+    def status(self):
+        if self.published == True:
+            return "Published"
+        else:
+            return "Drafted"
 
 class ArticleCommentModerator(CommentModerator):
     email_notification = True

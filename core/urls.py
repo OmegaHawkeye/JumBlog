@@ -16,10 +16,10 @@ urlpatterns = [
     path("article/<int:pk>/detail/",ArticleDetailView.as_view(),name="article-detail"),
     path("article/<int:pk>/update/",ArticleUpdateView.as_view(),name="article-update"),
     path("article/<int:pk>/delete/",ArticleDeleteView.as_view(),name="article-delete"),
-    path("bookmark/<int:pk>/",BookmarkView,name="bookmark-article"),
+    # path("bookmark/<int:pk>/",BookmarkView,name="bookmark-article"),
     #path("like/<int:pk>/",LikeView,name="like-article"),
     path("like/",LikeView,name="like-article"),
-    
+    path("bookmark/",BookmarkView,name="bookmark-article"),
     
     path("tasks/",TaskListView.as_view(),name="task-list"),
     path("task/create/",TaskCreateView.as_view(),name="task-create"),

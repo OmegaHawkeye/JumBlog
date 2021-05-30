@@ -36,10 +36,6 @@
             {% endif %}
           </p>
           <a href="{{ article.get_absolute_url }}" class="btn btn-link float-end text-dark nav-link fw-bold">Read more</a>
-          <div class="d-flex flex-row">
-                <button class="btn btn-link text-dark p-0 border-0 btn-outline-light my-3 mx-3 like-btn" id="{{article.id}}"><i class="bi bi-heart"></i></button>
-                <span class="text-dark text-center" id="like-count{{article.id}}"> {{ article.total_likes}} </span>
-          </div>
         </div>
       </div>
       <div class="col-md-4">
@@ -73,29 +69,5 @@
     {% endif %}
   </div>
 {% endif %}
-
-<script>
-  $(document).on('click','.like-btn', function(e){
-    e.preventDefault();
-    var article_id = $(this).attr("id")
-    $.ajax({
-      type: 'POST',
-      url : "{% url 'like-article' %}",
-      data: {
-        article_id: article_id,
-        csrfmiddlewaretoken: "{{ csrf_token }}",
-        action: "post",
-      },
-      success: function(res){
-        $("#like-count" + article_id).text(res["total_likes"])
-      },
-      error: function(rs,err){
-        alert("There is an error");
-        console.log(rs.response);
-      }
-    });
-  })
-</script>
-
 
 {% endblock content %}

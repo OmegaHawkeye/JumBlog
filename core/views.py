@@ -35,39 +35,55 @@ def handler500(request):
 #         liked=True
 #     return HttpResponseRedirect(reverse("article-detail",args=[str(pk)]))
 
+# def BookmarkView(request,pk):
+#     article = get_object_or_404(Article,id=request.POST.get("article_id"))
+#     if article.bookmarked == True:
+#         article.bookmarked = False
+#         article.save()
+#         bookmarked = False
+#     else:
+#         article.bookmarked = True
+#         article.save()
+#         bookmarked = True
+#     return HttpResponseRedirect(reverse("article-detail",args=[str(pk)]))
 
 def LikeView(request):
     if request.POST.get("action") == "post":
-    
         article_id = int(request.POST.get("article_id"))
         article = get_object_or_404(Article,id=article_id)
-        
+        liked = None
         if article.likes.filter(id=request.user.id).exists():
             article.likes.remove(request.user)
             article.likes_counter -= 1
             article.save()
+            liked = False
         else:
             article.likes.add(request.user)
             article.likes_counter += 1
             article.save()
-        return JsonResponse({"total_likes": article.likes_counter})
+            liked = True
+        return JsonResponse({"total_likes": article.likes_counter,"liked": liked})
     return HttpResponse("Error. Access Denied")
 
-def BookmarkView(request,pk):
-    article = get_object_or_404(Article,id=request.POST.get("article_id"))
-    if article.bookmarked == True:
-        article.bookmarked = False
-        article.save()
-        bookmarked = False
-    else:
-        article.bookmarked = True
-        article.save()
-        bookmarked = True
-    return HttpResponseRedirect(reverse("article-detail",args=[str(pk)]))
+def BookmarkView(request):
+    if request.POST.get("action") == "post":
+        article_id = int(request.POST.get("article_id"))
+        article = get_object_or_404(Article,id=article_id)
+        bookmarked = None
+        if article.bookmarked == True:
+            article.bookmarked = False
+            article.save()
+            bookmarked = False
+        else:
+            article.bookmarked = True
+            article.save()
+            bookmarked = True
+        return JsonResponse({"bookmarked": bookmarked})
+    return HttpResponse("Error. Access Denied")
 
 def landing(request):
     if request.user.is_authenticated:
-        messages.success(request, f'''You have been redirected since you are already logged in''')
+        # messages.success(request, f'''You have been redirected since you are already logged in''')
         return redirect("home")
     return render(request,"core/landing.html")
 
@@ -141,7 +157,7 @@ class ArticleListView(LoginRequiredMixin,ListView):
 class ArticleCreateView(LoginRequiredMixin, CreateView):
     model = Article
     template_name = "article/article_create.html"
-    fields = ['image','title','subtitle','content','tags','category','published','allow_comments']
+    fields = ['image_thumbnail','title','subtitle','content','tags','category','published','allow_comments']
     success_url = "/articles/"
 
     def form_valid(self, form):
@@ -152,15 +168,15 @@ class ArticleDetailView(LoginRequiredMixin,DetailView):
     model = Article
     template_name = "article/article_detail.html"
     context_object_name = "article"
-    fields = ['image','title','subtitle','content','tags','category','published','allow_comments']
+    fields = ['image_thumbnail','title','subtitle','content','tags','category','published','allow_comments']
 
     def get_context_data(self, *args,**kwargs):
         context = super(ArticleDetailView,self).get_context_data(**kwargs)
         article = get_object_or_404(Article,id=self.kwargs["pk"])
         liked = False
-        if article.liked.filter(id=self.request.user.id).exists():
-            liked = True
         bookmarked = False
+        if article.likes.filter(id=self.request.user.id).exists():
+            liked = True
         if article.bookmarked == True:
             bookmarked = True
         context["liked"] = liked
@@ -169,7 +185,7 @@ class ArticleDetailView(LoginRequiredMixin,DetailView):
 
 class ArticleUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Article
-    fields = ['image','title','subtitle','content','tags','category','published','allow_comments']
+    fields = ['image_thumbnail','title','subtitle','content','tags','category','published','allow_comments']
     template_name = "article/article_update.html"
     # success_url = '/articles/'
 
