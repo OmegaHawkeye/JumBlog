@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from decouple import config
+#from decouple import config
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 
@@ -8,7 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'm5zywpxsl+tu8$2d(u4_utr+v%)nvii94fc+hj2ixnfr4uwv0w'
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
