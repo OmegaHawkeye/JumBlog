@@ -11,3 +11,13 @@ class ContactUsForm(forms.ModelForm):
         super(ContactUsForm, self).__init__(*args, **kwargs)
         if self.user.is_authenticated:
             self.initial['email'] = self.user.email
+
+class NewsletterForm(forms.Form):
+    email = forms.EmailField()
+    
+    def __init__(self,*args, **kwargs):
+        super(NewsletterForm,self).__init__(*args,**kwargs)
+        self.fields["email"].widget.attrs['class'] = 'form-control'
+        self.fields["email"].label = ""
+        self.fields["email"].widget.attrs["placeholder"] = "Your Email"
+

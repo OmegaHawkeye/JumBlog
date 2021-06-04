@@ -1,4 +1,6 @@
-from support.forms import ContactUsForm
+from django.contrib import messages
+from django.views.generic.edit import FormView
+from support.forms import ContactUsForm, NewsletterForm
 from .mixins import StaffRequiredMixin
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -11,6 +13,15 @@ from django.views.generic import (
 )
 from .models import Ticket,ContactUs
 
+class AboutUs(FormView):
+    template_name = "support/about_us.html"
+    form_class = NewsletterForm
+    success_url = "/"
+
+    def form_valid(self,form):
+        messages.success(self.request,"Successfully added to Newsletter")
+        return super().form_valid(form)
+
 class ContactUs(CreateView):
     model = ContactUs
     template_name = "support/contact_us.html"
@@ -21,9 +32,6 @@ class ContactUs(CreateView):
         kwargs = super(ContactUs, self).get_form_kwargs()
         kwargs.update({'user': self.request.user})
         return kwargs
-
-    def get_success_url(self):
-        return reverse('landing')
 
 class TicketListView(LoginRequiredMixin,ListView):
     model = Ticket
@@ -55,9 +63,7 @@ class TicketCreateView(LoginRequiredMixin, CreateView):
     model = Ticket
     template_name = "support/ticket_create.html"
     fields = ['title','content']
-
-    def get_success_url(self):
-        return reverse('ticket-list')
+    success_url = "/tickets/"
 
     def form_valid(self, form):
         form.instance.creator = self.request.user

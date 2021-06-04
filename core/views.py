@@ -1,4 +1,4 @@
-from django.http.response import HttpResponse, JsonResponse
+from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import (
@@ -23,67 +23,32 @@ def handler404(request,exception):
 def handler500(request):
     return render(request, 'error/500.html', {"request":request}, status=500)
 
-# def LikeView(request,pk):
-#     article = get_object_or_404(Article,id=request.POST.get("article_id"))
-#     if article.liked.filter(id=request.user.id).exists():
-#         article.liked.remove(request.user)
-#         article.save()
-#         liked=False
-#     else:
-#         article.liked.add(request.user)
-#         article.save()
-#         liked=True
-#     return HttpResponseRedirect(reverse("article-detail",args=[str(pk)]))
-
-# def BookmarkView(request,pk):
-#     article = get_object_or_404(Article,id=request.POST.get("article_id"))
-#     if article.bookmarked == True:
-#         article.bookmarked = False
-#         article.save()
-#         bookmarked = False
-#     else:
-#         article.bookmarked = True
-#         article.save()
-#         bookmarked = True
-#     return HttpResponseRedirect(reverse("article-detail",args=[str(pk)]))
-
-def LikeView(request):
-    if request.POST.get("action") == "post":
-        article_id = int(request.POST.get("article_id"))
-        article = get_object_or_404(Article,id=article_id)
-        liked = None
+def LikeView(request,pk):
+    if request.method == "POST":
+        article = get_object_or_404(Article,id=pk)
         if article.likes.filter(id=request.user.id).exists():
             article.likes.remove(request.user)
-            article.likes_counter -= 1
             article.save()
-            liked = False
         else:
             article.likes.add(request.user)
-            article.likes_counter += 1
             article.save()
-            liked = True
-        return JsonResponse({"total_likes": article.likes_counter,"liked": liked})
+        return HttpResponseRedirect(reverse("article-detail",args=[str(pk)]))
     return HttpResponse("Error. Access Denied")
 
-def BookmarkView(request):
-    if request.POST.get("action") == "post":
-        article_id = int(request.POST.get("article_id"))
-        article = get_object_or_404(Article,id=article_id)
-        bookmarked = None
-        if article.bookmarked == True:
+def BookmarkView(request,pk):
+    if request.method == "POST":
+        article = get_object_or_404(Article,id=pk)
+        if article.bookmarked:
             article.bookmarked = False
             article.save()
-            bookmarked = False
         else:
             article.bookmarked = True
             article.save()
-            bookmarked = True
-        return JsonResponse({"bookmarked": bookmarked})
+        return HttpResponseRedirect(reverse("article-detail",args=[str(pk)]))
     return HttpResponse("Error. Access Denied")
 
 def landing(request):
     if request.user.is_authenticated:
-        # messages.success(request, f'''You have been redirected since you are already logged in''')
         return redirect("home")
     return render(request,"core/landing.html")
 
@@ -179,6 +144,7 @@ class ArticleDetailView(LoginRequiredMixin,DetailView):
             liked = True
         if article.bookmarked == True:
             bookmarked = True
+        context["total_likes"] = article.total_likes
         context["liked"] = liked
         context["bookmarked"] = bookmarked
         return context
@@ -272,7 +238,7 @@ class TaskUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
 class TaskDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Task
-    success_url = '/Tasks/'
+    success_url = '/tasks/'
     template_name = "tasks/task_confirm_delete.html"
 
     def test_func(self):
