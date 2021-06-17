@@ -32,14 +32,14 @@
             {% if request.user == article.author %}
               <small class="text-muted">Posted at {{ article.created_at|date:"d.F.Y H:i" }} from <a href="{% url 'user-articles-list' %}">{{article.author}}</a></small>
             {% else %}
-              <small class="text-muted">Posted at {{ article.created_at|date:"d.F.Y" }} from <a href="{% url 'user-published-articles-list' username=article.author %}">{{article.author}}</a></small>
+              <small class="text-muted">Posted at {{ article.created_at|date:"d.F.Y H:i" }} from <a href="{% url 'user-published-articles-list' username=article.author %}">{{article.author}}</a></small>
             {% endif %}
           </p>
           <a href="{{ article.get_absolute_url }}" class="btn btn-link float-end text-dark nav-link fw-bold">Read more</a>
         </div>
       </div>
       <div class="col-md-4">
-        <img src="{{article.image_thumbnail.url}}" class="card-img border border-dark border-3" alt="..." />
+        <img src="{{article.image_thumbnail.url}}" class="card-img border border-grey border-1" alt="..." />
       </div>
     </div>
   </div>

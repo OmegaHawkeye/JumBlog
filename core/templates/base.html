@@ -74,6 +74,9 @@
                             <a class="nav-link" href="{% url 'user-articles-list' %}">My Articles</a>
                         </li>
                         <li class="nav-item mx-3">
+                            <a class="nav-link" href="{% url 'profile' %}">My Profile</a>
+                        </li>
+                        <li class="nav-item mx-3">
                             <a class="nav-link" href="{% url 'article-create' %}">Write a Blog</a>
                         </li>
                         <li class="nav-item mx-3">
@@ -123,11 +126,10 @@
 
 <script src="{% static 'tellme/feedback/feedback.js' %}"></script>
 
-<script>
-    //AOS.init();
+<!--<script>
+    AOS.init();
     var scrollSpy = new bootstrap.ScrollSpy(document.body, {
         target: '#navbar-scroll'
     });
-</script>
-
+</script>-->
 </html>

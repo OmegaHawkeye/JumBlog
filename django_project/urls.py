@@ -33,5 +33,6 @@ if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL,
                         document_root=settings.STATIC_ROOT)
 
-handler404 = handler404
+handler404 = handler404 # you need that  and a view for it
+
 handler500 = handler500

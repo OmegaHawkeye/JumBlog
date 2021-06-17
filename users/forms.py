@@ -1,30 +1,22 @@
-from users.models import Profile
 from django import forms
-from django.contrib.auth.models import User
+from .validators import validate_email
+from .models import CustomUser
 from django.contrib.auth.forms import UserCreationForm
 
 class UserRegisterForm(UserCreationForm):
-    email = forms.EmailField()
+    email = forms.EmailField(validators=[validate_email])
 
     def __init__(self, *args, **kwargs):
         super(UserRegisterForm, self).__init__(*args, **kwargs)
 
         for fieldname in ['username','email','password1','password2']:
             self.fields[fieldname].help_text = None
-            # self.fields[fieldname].label = ""
 
     class Meta:
-        model = User
+        model = CustomUser
         fields = ['username', 'email', 'password1','password2']
 
 class UserUpdateForm(forms.ModelForm):
-    email = forms.EmailField()
-
     class Meta:
-        model = User
-        fields = ["first_name","last_name",'username','email']
-
-class ProfileUpdateForm(forms.ModelForm):
-    class Meta:
-        model = Profile
-        fields = ["image"]
+        model = CustomUser
+        fields = ["first_name","last_name",'username','email',"image"]

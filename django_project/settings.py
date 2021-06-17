@@ -10,8 +10,6 @@ SECRET_KEY = 'm5zywpxsl+tu8$2d(u4_utr+v%)nvii94fc+hj2ixnfr4uwv0w'
 
 DEBUG = True
 
-#ALLOWED_HOSTS = ['*']
-
 ADMINS = [('Julian Chornitzer','chornitzerj@gmail.com')]
 
 MANAGERS = ADMINS
@@ -102,10 +100,10 @@ else:
     DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME':  'd524shvjl7ma7i', #"d32c2lrrbe2a3g",
-        'USER':   'wnuqywpsaosani', #"dkepjptgunkgri",
-        'PASSWORD': '0ecd0e2179baa442784e61ee3f57975f1cc6af971778849d19e89e7705a105a5', #"825f4a274a36a5d574cd2a4b87893ee3eb431ecbe3ef7f7124b48a3d171198ea",
-        'HOST':  'ec2-52-19-96-181.eu-west-1.compute.amazonaws.com', #"ec2-34-254-69-72.eu-west-1.compute.amazonaws.com", 
+        'NAME':   "d32c2lrrbe2a3g",
+        'USER':    "dkepjptgunkgri",
+        'PASSWORD': "825f4a274a36a5d574cd2a4b87893ee3eb431ecbe3ef7f7124b48a3d171198ea",
+        'HOST':  "ec2-34-254-69-72.eu-west-1.compute.amazonaws.com", 
         'PORT': '5432'
         }   
     }      
@@ -124,6 +122,8 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+AUTH_USER_MODEL = "users.CustomUser"
 
 LANGUAGE_CODE = 'en-us'
 

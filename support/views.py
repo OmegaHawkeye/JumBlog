@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.views.generic.edit import FormView
-from support.forms import ContactUsForm, NewsletterForm
+from support.forms import ContactUsForm,NewsletterForm
 from .mixins import StaffRequiredMixin
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -12,6 +12,7 @@ from django.views.generic import (
     DeleteView
 )
 from .models import Ticket,ContactUs
+from users.models import CustomUser
 
 class AboutUs(FormView):
     template_name = "support/about_us.html"
@@ -20,6 +21,12 @@ class AboutUs(FormView):
 
     def form_valid(self,form):
         messages.success(self.request,"Successfully added to Newsletter")
+        form.save(commit=False)
+        email = form.cleaned_data.get("email")
+        user = CustomUser.objects.get(email=email)
+        user.newsletter = True
+        user.save()
+        form.save(commit=True)
         return super().form_valid(form)
 
 class ContactUs(CreateView):
@@ -44,8 +51,8 @@ class TicketListView(LoginRequiredMixin,ListView):
 
     def get_context_data(self, *args,**kwargs):
         context = super(TicketListView,self).get_context_data(**kwargs)
-        context["open"] = Ticket.objects.filter(creator=self.request.user,status="Open")
-        context["closed"] = Ticket.objects.filter(creator=self.request.user,status="Closed")    
+        context["open"] = Ticket.objects.filter(creator=self.request.user,status=True)
+        context["closed"] = Ticket.objects.filter(creator=self.request.user,status=False)    
         return context
 
 
@@ -63,7 +70,7 @@ class TicketCreateView(LoginRequiredMixin, CreateView):
     model = Ticket
     template_name = "support/ticket_create.html"
     fields = ['title','content']
-    success_url = "/tickets/"
+    success_url = "/support/tickets/"
 
     def form_valid(self, form):
         form.instance.creator = self.request.user

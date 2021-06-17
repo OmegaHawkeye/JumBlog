@@ -1,3 +1,4 @@
+from support.forms import NewsletterForm
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -15,11 +16,12 @@ from django.urls import reverse
 from .models import Article, Task
 from django.db.models import Q
 from bootstrap_datepicker_plus import DateTimePickerInput
+from django.utils.safestring import mark_safe
+import random
 
 def handler404(request,exception):
     return render(request, 'error/404.html', {"exception":exception,"request":request}, status=404)
-
-    
+        
 def handler500(request):
     return render(request, 'error/500.html', {"request":request}, status=500)
 
@@ -50,13 +52,28 @@ def BookmarkView(request,pk):
 def landing(request):
     if request.user.is_authenticated:
         return redirect("home")
-    return render(request,"core/landing.html")
+    if request.method == "POST":
+        form = NewsletterForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request,"Successfully added to Newsletter")
+            return redirect("landing")    
+    else:
+        form = NewsletterForm()
+    return render(request,"core/landing.html",{"form":form})
 
 @login_required
 def home(request):
+    # first_article_id = Article.objects.first().id
+    # last_article_id = Article.objects.last().id
+    # random_Article_id = random.randrange(first_article_id,last_article_id)
+    # random_Article = Article.objects.get(id=random_Article_id)
     first = Article.objects.filter(published=True).first()
     last = Article.objects.filter(published=True).last()
     triple = Article.objects.filter(published=True)[1:4]
+
+    if(not request.user.first_name or not request.user.last_name):
+       messages.info(request, mark_safe("Please complete your <a href='/accounts/profile'>Profile</a>! "))
     
     return render(request,"core/home.html",{"first":first,"last":last,"triple":triple})
 
@@ -184,8 +201,8 @@ class TaskListView(LoginRequiredMixin,ListView):
     model = Task
     template_name = 'tasks/tasks_list.html'
     context_object_name = 'tasks'
-    ordering = ['-created_at']
-    paginate_by = 20
+    ordering = ['start']
+    paginate_by = 10
 
     def get_queryset(self):
         return Task.objects.filter(completed=False)
@@ -193,7 +210,7 @@ class TaskListView(LoginRequiredMixin,ListView):
 class TaskCreateView(LoginRequiredMixin, CreateView):
     model = Task
     template_name = "tasks/task_create.html"
-    fields = ['title','content',"start","end"]
+    fields = ['name',"start","end"]
     success_url = "/tasks/"
 
     def get_form(self):
@@ -213,18 +230,15 @@ class TaskDetailView(LoginRequiredMixin,DetailView):
 
 class TaskUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Task
-    fields = ['title','content',"start","end"]
+    fields = ['name',"start","end","completed"]
     template_name = "tasks/task_update.html"
-    # success_url = '/Tasks/'
+    success_url = "/tasks/"
 
     def get_form(self):
         form = super().get_form()
         form.fields["start"].widget = DateTimePickerInput()
         form.fields["end"].widget = DateTimePickerInput()
         return form
-
-    def get_success_url(self):
-        return reverse('task-detail', kwargs={'pk': self.object.id})
 
     def form_valid(self, form):
         form.instance.creator = self.request.user

@@ -84,11 +84,7 @@ six==1.15.0
 soupsieve==2.2.1
 sqlparse==0.4.1
 toml==0.10.2
-<<<<<<< HEAD
 Twisted==21.2.0
-=======
-#Twisted==21.2.0
->>>>>>> a43a53a2dcc6160483e9c9e33d36069469f53cba
 txaio==21.2.1
 urllib3==1.26.4
 webencodings==0.5.1

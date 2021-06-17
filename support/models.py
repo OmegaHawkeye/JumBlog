@@ -1,14 +1,14 @@
 from django.db import models
 from django.urls import reverse
 from django.db import models
-from django.contrib.auth.models import User
 from martor.models import MartorField
+from django_project.settings import AUTH_USER_MODEL
 
 class Ticket(models.Model):
     title = models.CharField(max_length=255)
     content = MartorField()
-    creator = models.ForeignKey(User,on_delete=models.CASCADE)
-    supporter = models.ForeignKey(User,on_delete=models.CASCADE,related_name="ticket_supporter",blank=True,null=True)
+    creator = models.ForeignKey(AUTH_USER_MODEL,on_delete=models.CASCADE)
+    supporter = models.ForeignKey(AUTH_USER_MODEL,on_delete=models.CASCADE,related_name="ticket_supporter",blank=True,null=True)
     status = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=False,auto_now=True)
@@ -36,3 +36,10 @@ class ContactUs(models.Model):
 
     def __str__(self):
         return f'{self.title} by {self.email}' 
+
+class Newsletter(models.Model):
+    email = models.EmailField(unique=True)
+    status = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.email

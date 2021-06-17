@@ -1,6 +1,6 @@
 from django.urls import reverse
 from django.db import models
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 from imagekit.models.fields import ProcessedImageField
 from taggit.managers import TaggableManager
 from django_comments.moderation import CommentModerator
@@ -8,6 +8,7 @@ from django_comments_xtd.moderation import moderator
 from martor.models import MartorField
 from imagekit.processors import ResizeToFill
 import datetime
+from django_project.settings import AUTH_USER_MODEL
 
 CATEGORY_CHOICES = (
     ('WebDevelopment','Web Development'),
@@ -19,17 +20,17 @@ CATEGORY_CHOICES = (
 )
 
 class Article(models.Model):
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=100,unique=True)
     subtitle = models.CharField(max_length=100,null=True,blank=True)
-    author = models.ForeignKey(User,on_delete=models.CASCADE)
+    author = models.ForeignKey(AUTH_USER_MODEL,on_delete=models.CASCADE)
     content = MartorField()
-    image_thumbnail = ProcessedImageField(blank=True,upload_to="article_pics/",processors=[ResizeToFill(400,400)],format='JPEG', options={'quality': 80})
+    image_thumbnail = ProcessedImageField(blank=True,upload_to="article_pics/",processors=[ResizeToFill(400,400)],format='JPEG', options={'quality': 80},unique=True)
     category = models.CharField(max_length=155,choices=CATEGORY_CHOICES,null=True,blank=True)
     tags = TaggableManager()
     bookmarked= models.BooleanField(default=False)
     allow_comments = models.BooleanField(default=True)
     published = models.BooleanField(default=True)
-    likes = models.ManyToManyField(User,related_name="article_likes",blank=True)
+    likes = models.ManyToManyField(AUTH_USER_MODEL,related_name="article_likes",blank=True)
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -58,9 +59,8 @@ class ArticleCommentModerator(CommentModerator):
 moderator.register(Article, ArticleCommentModerator)
 
 class Task(models.Model):
-    title = models.CharField(max_length=255)
-    creator = models.ForeignKey(User,on_delete=models.CASCADE)
-    content = MartorField()
+    name = models.CharField(max_length=100)
+    creator = models.ForeignKey(AUTH_USER_MODEL,on_delete=models.CASCADE)
     start = models.DateTimeField()
     end = models.DateTimeField()
     completed = models.BooleanField(default=False)
@@ -71,6 +71,12 @@ class Task(models.Model):
 
     def get_absolute_url(self):
         return reverse('task-detail', kwargs={'pk': self.pk})
+
+    def get_update_url(self):
+        return reverse('task-update', kwargs={'pk': self.pk})
+
+    def get_deletion_url(self):
+        return reverse('task-delete', kwargs={'pk': self.pk})
 
     @property
     def getStatus(self):
