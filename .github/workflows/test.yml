@@ -3,7 +3,8 @@ name: Test Django App
 on: 
   push:
     branches: [ master ]
-    
+
+
 jobs:
   test_django_with_coverage:
     runs-on: ubuntu_latest
@@ -15,11 +16,13 @@ jobs:
       with:
         python_version: 3.8
     - name: Install dependencies
-    run: python -m pip install --upgrade pip
-    run: pip install -r requirements.txt
+      run: |
+      python -m pip install --upgrade pip
+      pip install -r requirements.txt
     - name: Install and run Coverage
-    run: pip install coverage   
-    run: coverage run manage.py test
-    run: coverage report
+      run: |
+      pip install coverage
+      coverage run manage.py test
+      coverage report
     - name: Run Django Test
-    run: python manage.py test
+      run: python manage.py test
