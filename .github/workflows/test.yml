@@ -7,7 +7,7 @@ on:
 
 jobs:
   test_django_with_coverage:
-    runs_on: ubuntu_latest
+    runs-on: ubuntu_latest
 
     steps:
     - uses: actions/checkout@v2
