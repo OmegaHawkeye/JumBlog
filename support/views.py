@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.views.generic.edit import FormView
 from support.forms import ContactUsForm,NewsletterForm
-from .mixins import StaffRequiredMixin
+from .mixins import SupportRequiredMixin
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import (
@@ -56,7 +56,7 @@ class TicketListView(LoginRequiredMixin,ListView):
         return context
 
 
-class SupporterTicketListView(StaffRequiredMixin,LoginRequiredMixin,ListView):
+class SupporterTicketListView(SupportRequiredMixin,LoginRequiredMixin,ListView):
     model = Ticket
     template_name = 'support/supporter_ticket_list.html'
     context_object_name = 'tickets'

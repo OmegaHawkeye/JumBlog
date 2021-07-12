@@ -1,3 +1,9 @@
+.bg-steel {
+  background-color: #eff1f2;
+}
+.min-h-100{
+  min-height: 100%;
+}
 a {
   text-decoration: none !important;
 }
@@ -446,8 +452,7 @@ h6,
   border: 1px solid #dddddd;
   border-radius: 3px;
   margin:20px auto;
-}
-
+} 
 .box {
   width: 500px;
   /* position:relative;
@@ -455,8 +460,6 @@ h6,
   margin: 4rem auto;
   height: auto;
 }
-
 .marked-emoji{
-  height: 75px;
-  width:75px;
+  width:50px;
 }

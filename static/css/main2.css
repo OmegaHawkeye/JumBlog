@@ -1,7 +1,9 @@
 .bg-steel {
   background-color: #eff1f2;
 }
-
+.min-h-100{
+  min-height: 100%;
+}
 a {
   text-decoration: none !important;
 }

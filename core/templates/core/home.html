@@ -56,11 +56,11 @@
         <div class="row">
             {% for item in triple %}
             <div class="col-md-4">
-                <div class="card shadow-sm">
+                <div class="card shadow-sm min-h-100">
                     <img src="{{ item.image_thumbnail.url }}" class="card-img-top" alt="...">
                     <div class="card-body">
                         <h4 class="card-title font-weight-bold">{{ item.title }}</h4> 
-                        <p class="card-text">{{ item.content|slice:":75"|safe_markdown }}</p>
+                        <p class="card-text">{{ item.content|slice:":100"|safe_markdown }}</p>
                         <small class="text-dark">Posted at {{ item.created_at|date:"d.F.Y" }} from <a href="{% url 'user-published-articles-list' username=item.author %}">{{item.author}}</a></small>
                     </div>
                     <div class="card-footer">

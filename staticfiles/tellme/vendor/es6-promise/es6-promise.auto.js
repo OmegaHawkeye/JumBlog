@@ -1173,3 +1173,4 @@ return Promise$2;
 
 
 
+//# sourceMappingURL=es6-promise.auto.map
