@@ -24,7 +24,7 @@ class Article(models.Model):
     subtitle = models.CharField(max_length=100,null=True,blank=True)
     author = models.ForeignKey(AUTH_USER_MODEL,on_delete=models.CASCADE)
     content = MartorField()
-    image_thumbnail = ProcessedImageField(blank=True,upload_to="article_pics/",processors=[ResizeToFill(400,400)],format='JPEG', options={'quality': 80},unique=True)
+    image_thumbnail = ProcessedImageField(blank=True,upload_to="article_pics/",processors=[ResizeToFill(400,400)],format='JPEG', options={'quality': 80})
     category = models.CharField(max_length=155,choices=CATEGORY_CHOICES,null=True,blank=True)
     tags = TaggableManager()
     bookmarked= models.BooleanField(default=False)
@@ -67,7 +67,7 @@ class Task(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'{self.title} created by {self.creator}'
+        return f'{self.name} created by {self.creator}'
 
     def get_absolute_url(self):
         return reverse('task-detail', kwargs={'pk': self.pk})
