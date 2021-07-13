@@ -3,6 +3,7 @@ __pycache__
 .vscode
 venv
 .env
-landing page
-login
-default_query.sql
+.coverage
+jumblog.dot
+jumblog.jpg
+.github/workflows/publish.yml
