@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load martortags %}
+{% load crispy_forms_tags %}
+{% load comments %}
+{% load comments_xtd %}
+{% load martortags %}
+
+{% block title %} Detail Page of an Article{% endblock title %}
+
+{% block extrahead %}
+  {{form.media}}
+{% endblock extrahead %}
+
+{% block content %}
+
+<div class="container my-3 d-flex">
+    <img src="{{article.image_thumbnail.url}}" class="mx-auto img-thumbnail">
+</div>
+ <div class="container my-4 text-center">
+    <h1 class="fw-bold">{{ article.title }}</h1>
+    <div class="span">
+        <h6 class="text-secondary">Posted on {{ article.created_at|date:"d.F.Y" }} by {{article.author}}</h6>
+    </div>
+    {% if article.author != user %}
+      <div class="d-flex flex-row justify-content-center">
+        <form action="{% url 'like-article' article.id %}" method="POST">
+            {% csrf_token %}
+            {% if liked %}
+                <button type="submit" class="btn btn-link text-danger p-0 mx-3 "><i class="bi bi-heart-fill"></i></button>
+            {% else %}
+                <button type="submit" class="btn btn-link text-danger p-0 mx-3 "><i class="bi bi-heart"></i></button>
+            {% endif %}
+        </form>
+        <form action="{% url 'bookmark-article' article.id %}" method="POST">
+            {% csrf_token %}
+            {% if bookmarked %}
+                <button type="submit" class="btn btn-link text-dark p-0 mx-3"><i class="bi bi-bookmark-fill"></i></button>
+            {% else %}
+                <button type="submit" class="btn btn-link text-dark p-0 mx-3"><i class="bi bi-bookmark"></i></button>
+            {% endif %}
+        </form>
+      </div>
+    {% endif %}
+
+    {% if article.author == user %}
+        <a class="btn btn-secondary btn-sm mx-3 my-3" href="{% url 'article-update' article.id %}"><i class="bi bi-pen"></i></a>
+        <a class="btn btn-danger btn-sm my-3" href="{% url 'article-delete' article.id %}"><i class="bi bi-trash"></i></a>
+    {% endif %}
+      <hr>
+      <p>{{ article.content|safe_markdown }}</p>
+      <hr>
+  </div>
+    <div class="container my-3">
+      {% if user.is_authenticated and article.allow_comments %}
+        {% render_comment_form for article %}
+        <hr>
+        {% get_comment_count for article as comment_count %}
+        {% if comment_count %}
+            <ul class="media-list">
+                {% render_xtdcomment_tree for article allow_flagging allow_feedback show_feedback %}
+            </ul>
+        {% endif %}
+      {% else %}
+        <div class="text-center">
+          <span class="text-muted">Comments are disabled. Contact the Author or an Admin on our Discord Server for more Information</span>
+        </div>
+    {% endif %}     
+  </div>
+{% endblock content %}

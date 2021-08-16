@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load martortags %}
+
+{% block title %}List all Articles{% endblock title %}
+
+{% block extrahead %}
+  {{form.media}}
+{% endblock extrahead %}
+
+{% block content %}
+
+<div class="container my-5">
+  {% for article in articles %}
+  <div class="card mb-3 shadow-sm">
+    <div class="row">
+      <div class="col-md-8 align-self-center">
+        <div class="card-body">
+          <h3 class="card-title fw-bold mb-3">{{article.title}}</h3>
+          {% if article.subtitle %}
+            <h6 class="card-subtitle mb-3">{{article.subtitle}}</h6>
+          {% endif %}
+          <p class="card-text">
+            {{article.content|safe_markdown|slice:":200"}}
+          </p>
+          {% for tag in article.tags.all %}
+            <span class="badge rounded-pill bg-primary"> {{tag}}</span>
+          {% endfor %} 
+          <p class="card-text mt-3">
+            <small class="text-dark">Category: {{article.category}}</small>
+          </p>
+           <p class="card-text mt-3">
+            {% if request.user == article.author %}
+              <small class="text-muted">Posted at {{ article.created_at|date:"d.F.Y H:i" }} from <a href="{% url 'user-articles-list' %}">{{article.author}}</a></small>
+            {% else %}
+              <small class="text-muted">Posted at {{ article.created_at|date:"d.F.Y H:i" }} from <a href="{% url 'user-published-articles-list' username=article.author %}">{{article.author}}</a></small>
+            {% endif %}
+          </p>
+          <a href="{{ article.get_absolute_url }}" class="btn btn-link float-end text-dark nav-link fw-bold">Read more</a>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <img src="{{article.image_thumbnail.url}}" class="card-img border border-grey border-1" alt="..." />
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+  <a class="btn btn-more float-end text-light mb-5" href="{% url 'article-create' %}"><i class="bi bi-plus-square"></i> Create Article</a>
+</div>
+
+
+{% if is_paginated %}
+  <div class="container">
+    {% if page_obj.has_previous %}
+      <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+      <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+    {% endif %}
+
+    {% for num in page_obj.paginator.page_range %}
+      {% if page_obj.number == num %}
+        <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+      {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+        <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+      {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+      <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>
+      <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+    {% endif %}
+  </div>
+{% endif %}
+
+{% endblock content %}

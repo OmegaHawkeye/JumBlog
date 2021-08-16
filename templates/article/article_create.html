@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_field %}
+{% load static %}
+
+{% block title %}Create an Article{% endblock title %}
+
+{% block extrahead %}
+  {{form.media}}
+{% endblock extrahead %}
+
+{% block content %}
+<div class="content-section mt-4">
+  <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <fieldset class="form-group">
+          <legend class="border-bottom mb-4">Article</legend>
+          {{form|crispy}}
+      </fieldset>
+      <div class="form-group">
+          <button class="btn btn-outline-info" type="submit"><i class="fas fa-save"></i> Save</button>
+      </div>
+  </form>
+</div>
+
+
+{% endblock %}

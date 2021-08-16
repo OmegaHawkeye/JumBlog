@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% load static %}
+{% load martortags %}
+
+{% block title %}Home{% endblock title %}
+
+{% block extrahead %}
+  {{form.media}}
+{% endblock extrahead %}
+
+{% block content %}
+    {% if not user.is_authenticated%}
+    <!-- NAVIGATION END -->
+    <div class="head-section">
+        <div class="container">
+            <div class="row p-5">
+                <div class="col align-self-center">
+                    <h1 class="font-weight-bold">Read and share new ideas
+                        with everyone about any topic. for free! 📝</h1>
+                    <h2 class="text-secondary font-weight-lighter">Own your content & share it with people ☕️</h2>
+                </div>
+                <div class="col align-self-center">
+                    <img src="{% static 'img/head-img.png' %}" class="img-fluid">
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <!-- CONTENT -->
+    {% if first %}    
+    <div class="container mt-4">
+        <div class="card mb-3 shadow-sm">
+            <div class="row">
+                <div class="col-md-8 align-self-center">
+                    <div class="card-body">
+                        <h3 class="card-title font-weight-bold">{{ first.title }}</h3>
+                        <p class="card-text">{{ first.content|slice:":255"|safe_markdown }}</p>
+                        <p class="card-text mt-3">
+                            {% if request.user == first.author %}
+                                <small class="text-dark">Posted at {{ first.created_at|date:"d.F.Y" }} from <a href="{% url 'user-articles-list' %}">{{first.author}}</a></small>
+                            {% else %}
+                                <small class="text-dark">Posted at {{ first.created_at|date:"d.F.Y" }} from <a href="{% url 'user-published-articles-list' username=first.author %}">{{first.author}}</a></small>
+                            {% endif %}
+                        </p>  
+                        <a href="{{ first.get_absolute_url }}"class="btn btn-link float-end text-dark nav-link fw-bold">Read more</a>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <img src="{{ first.image_thumbnail.url }}" class="card-img" alt="...">
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <div class="container mt-4">
+        <div class="row">
+            {% for item in triple %}
+            <div class="col-md-4">
+                <div class="card shadow-sm min-h-100">
+                    <img src="{{ item.image_thumbnail.url }}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h4 class="card-title font-weight-bold">{{ item.title }}</h4> 
+                        <p class="card-text">{{ item.content|slice:":100"|safe_markdown }}</p>
+                        <small class="text-dark">Posted at {{ item.created_at|date:"d.F.Y" }} from <a href="{% url 'user-published-articles-list' username=item.author %}">{{item.author}}</a></small>
+                    </div>
+                    <div class="card-footer">
+                        <a href="{% url 'article-detail' item.id %}" class="btn btn-link text-uppercase text-dark nav-link fw-bold">Read more</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% if last %}
+    <div class="container my-4 bg-latest">
+        <div class="row mb-3">
+            <div class="col-md-8 align-self-center">
+                <div class="card-body">
+                    <h3 class="card-title font-weight-bold">{{ last.title }}</h3>
+                    <p class="card-text">{{ last.content|slice:":255"|safe_markdown }}</p>
+                    <p class="card-text mt-3">
+                        {% if request.user == last.author %}
+                            <small class="text-dark">Posted at {{ last.created_at|date:"d.F.Y" }} from <a href="{% url 'user-articles-list' %}">{{last.author}}</a></small>
+                        {% else %}
+                            <small class="text-dark">Posted at {{ last.created_at|date:"d.F.Y" }} from <a href="{% url 'user-published-articles-list' username=last.author %}">{{last.author}}</a></small>
+                        {% endif %}
+                    </p>  
+                    <a href="{{ last.get_absolute_url }}"class="btn btn-link float-end text-dark nav-link fw-bold">Read more</a>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <img src="{{ last.image_thumbnail.url }}" class="card-img" alt="...">
+            </div>
+        </div>
+        <a class="btn btn-more float-end text-light mb-5"href="{% url "article-list" %}">See more <i class="ri-arrow-down-circle-fill"></i></a>
+    </div>
+    {% endif %}
+
+{% endblock content %}

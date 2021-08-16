@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Profile{% endblock title %}
+
+{% block extrahead %}
+  {{form.media}}
+{% endblock extrahead %}
+
+{% block content %}
+<div class="content-section">
+  <div class="media">
+    <img class="article-img mt-4" src="{{ user.image.url }}">
+    <div class="media-body">
+      <h2 class="account-heading mt-4">{{ user.username }}</h2>
+      <p class="text-secondary">{{ user.email }}</p>
+      <p class="text-muted">Current XP: <b>{{ user.xp }}</b></p>
+      <p class="text-muted">Role: {{ user.role }}</p>
+    </div>
+  </div>
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <fieldset class="form-group">
+      <legend class="border-bottom mb-4">Profile Info</legend>
+      {{ u_form|crispy }}
+      <a class="btn btn-outline-primary mb-3" href="{% url 'password_change' %}">Change Password</a>
+    </fieldset>
+    <div class="form-group">
+      <button class="btn btn-outline-info" type="submit">Update</button>
+    </div>
+  </form>
+</div>
+{% endblock content %}
