@@ -35,12 +35,6 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     'django_email_verification',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.facebook',
-    'allauth.socialaccount.providers.google',
-    'allauth.socialaccount.providers.linkedin',
     'debug_toolbar',
     'martor',
     'taggit',
@@ -51,6 +45,7 @@ INSTALLED_APPS = [
     'admin_honeypot',
     'django_extensions',
     'tellme',
+    'friendship',
 ]
 
 if DEBUG:

@@ -1,4 +1,4 @@
-from core.sitemaps import ArticleViewSitemap
+from core.sitemaps import ArticleViewSitemap,TaskViewSitemap,StaticViewSitemap,TicketViewSitemap
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
@@ -9,16 +9,19 @@ from django.contrib.sitemaps.views import sitemap
 from core.views import handler404,handler500
 
 sitemaps = {
-    "Articles": ArticleViewSitemap
+    "Articles": ArticleViewSitemap,
+    "Tasks": TaskViewSitemap,
+    "Tickets": TicketViewSitemap,
+    "Static": StaticViewSitemap
 }
 
 urlpatterns = [
     path('secret/', admin.site.urls),
     path('admin/',include('admin_honeypot.urls',namespace='admin_honeypot')),
     path("accounts/", include('users.urls')),
+    path('friendship/', include('friendship.urls')),
     path('email/', include(email_urls)),
     path('', include('core.urls')),
-    path('accounts/', include('allauth.urls')),
     path('__debug__/', include(debug_toolbar.urls)),
     path('martor/', include('martor.urls')),
     path('comments/', include('django_comments_xtd.urls')),
@@ -33,6 +36,5 @@ if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL,
                         document_root=settings.STATIC_ROOT)
 
-handler404 = handler404 # you need that  and a view for it
-
+handler404 = handler404
 handler500 = handler500

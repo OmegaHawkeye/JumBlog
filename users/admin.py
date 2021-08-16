@@ -1,6 +1,4 @@
-from django.contrib.auth.forms import UserChangeForm
-from django.contrib.auth.models import Group
-from users.models import CustomUser
+from users.models import CustomUser,Feature,Role
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .forms import UserRegisterForm
@@ -9,13 +7,14 @@ class CustomUserAdmin(UserAdmin):
     model = CustomUser
     add_form = UserRegisterForm
 
-    list_display = ('email', 'username', 'is_supporter')
+    list_display = ('email', 'username', 'role')
     fieldsets = (
-        (None, {'fields': ('email', 'password')}),
-        ('Personal info', {'fields': ('username','first_name','last_name')}),
-        ('Profile Info', {'fields': ('image','newsletter')}),
-        ('Permissions', {'fields': ('is_active','is_supporter','is_staff','is_superuser')}),
+        (None, {'fields': ('email','username','role')}),
+        ('Personal info', {'fields': ('first_name','last_name')}),
+        ('Profile Info', {'fields': ('image','newsletter','xp','features')}),
+        ('Permissions', {'fields': ('groups','is_active','is_supporter','is_staff','is_superuser')}),
     )
 
 admin.site.register(CustomUser,CustomUserAdmin)
-admin.site.unregister(Group)
+admin.site.register(Role)
+admin.site.register(Feature)
