@@ -1,16 +1,15 @@
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.views.generic.edit import UpdateView
 from .forms import UserRegisterForm, UserUpdateForm
 from django.shortcuts import redirect, render
-from django.urls import reverse
 from django.contrib import messages
 from django_email_verification import send_email
 from .decorators import unauthenticated_user
 from django.contrib.auth.decorators import login_required
 from .models import CustomUser
+from friendship.models import Friend,Follow,Block
+from django.urls import reverse
 
-# @unauthenticated_user
-def Register(request):
+@unauthenticated_user
+def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
         if form.is_valid():
@@ -22,7 +21,7 @@ def Register(request):
             send_email(user)
             messages.success(
                 request, f'''Your account has been created! 
-                Please go into your mail and confirm your account to login''')
+                Please go into your mails and confirm your account to login''')
             return redirect('login')
     else:
         form = UserRegisterForm()
@@ -32,36 +31,38 @@ def Register(request):
 @login_required
 def profile(request):
     if request.method == 'POST':
-        # p_form = ProfileUpdateForm(request.POST,
-        #                                request.FILES,
-        #                                instance=request.user.profile)
         u_form = UserUpdateForm(request.POST,request.FILES,instance=request.user)
-        if u_form.is_valid(): #and p_form.is_valid():
+        if u_form.is_valid():
             u_form.save()
-            # p_form.save()
             messages.success(request, f'Your profile has been updated!')
             return redirect('profile')
     else:
         u_form = UserUpdateForm(instance=request.user)
-        # p_form = ProfileUpdateForm(instance=request.user.profile)
     return render(request, 'account/profile.html', {'u_form': u_form})
 
 
-class CustomUserUpdateView(UpdateView,LoginRequiredMixin,UserPassesTestMixin):
-    template_name = "account/user-profile.html"
-    model = CustomUser
-    form_class = UserUpdateForm
-    success_url = "/home/"
+@login_required
+def users_profile(request, pk):
+    other_user = CustomUser.objects.get(pk=pk)
+    followers = Follow.objects.followers(other_user)
+    friends = Friend.objects.friends(other_user)
+    blocked = Block.objects.blocked(other_user)
+    friendsCount = len(Friend.objects.friends(other_user))
+    followersCount = len(Follow.objects.followers(other_user))
+    unreadfriendrequestsCount = Friend.objects.unread_request_count(user=other_user)
+    unreadfriendrequests = Friend.objects.unread_requests(user=other_user)
+    sentfriendrequest = Friend.objects.sent_requests(user=request.user)
 
-    def get_success_url(self):
-        return reverse("user-profile",kwargs={"pk": self.object.id}) 
+    context = {
+        "other_user": other_user,
+        "followers": followers,
+        "friends": friends,
+        "blocked": blocked,
+        "friendsCount":friendsCount,
+        "followersCount":followersCount,
+        "unreadfriendrequestsCount":unreadfriendrequestsCount,
+        "unreadfriendrequests":unreadfriendrequests,
+        "sentfriendrequest" : sentfriendrequest
+    }
 
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        return super().form_valid(form)
-
-    def test_func(self):
-        profile = self.get_object()
-        if self.request.user == profile.user:
-            return True
-        return False
+    return render(request, "account/user-profile.html", context)

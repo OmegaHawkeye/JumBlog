@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% load static %}
-{% load martortags %}
 
 {% block title %}Home{% endblock title %}
 
@@ -34,7 +33,7 @@
                 <div class="col-md-8 align-self-center">
                     <div class="card-body">
                         <h3 class="card-title font-weight-bold">{{ first.title }}</h3>
-                        <p class="card-text">{{ first.content|slice:":255"|safe_markdown }}</p>
+                        <p class="card-text">{{ first.content|slice:":255"|safe }}</p>
                         <p class="card-text mt-3">
                             {% if request.user == first.author %}
                                 <small class="text-dark">Posted at {{ first.created_at|date:"d.F.Y" }} from <a href="{% url 'user-articles-list' %}">{{first.author}}</a></small>
@@ -60,7 +59,7 @@
                     <img src="{{ item.image_thumbnail.url }}" class="card-img-top" alt="...">
                     <div class="card-body">
                         <h4 class="card-title font-weight-bold">{{ item.title }}</h4> 
-                        <p class="card-text">{{ item.content|slice:":100"|safe_markdown }}</p>
+                        <p class="card-text">{{ item.content|slice:":100"|safe }}</p>
                         <small class="text-dark">Posted at {{ item.created_at|date:"d.F.Y" }} from <a href="{% url 'user-published-articles-list' username=item.author %}">{{item.author}}</a></small>
                     </div>
                     <div class="card-footer">
@@ -77,7 +76,7 @@
             <div class="col-md-8 align-self-center">
                 <div class="card-body">
                     <h3 class="card-title font-weight-bold">{{ last.title }}</h3>
-                    <p class="card-text">{{ last.content|slice:":255"|safe_markdown }}</p>
+                    <p class="card-text">{{ last.content|slice:":255"|safe }}</p>
                     <p class="card-text mt-3">
                         {% if request.user == last.author %}
                             <small class="text-dark">Posted at {{ last.created_at|date:"d.F.Y" }} from <a href="{% url 'user-articles-list' %}">{{last.author}}</a></small>

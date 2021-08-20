@@ -14,6 +14,8 @@
     <div class="media-body">
       <h2 class="account-heading mt-4">{{ user.username }}</h2>
       <p class="text-secondary">{{ user.email }}</p>
+      <p class="text-muted">Current XP: <b>{{ user.xp }}</b></p>
+      <p class="text-muted">Role: {{ user.role }}</p>
     </div>
   </div>
   <form method="POST" enctype="multipart/form-data">

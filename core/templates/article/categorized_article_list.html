@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% load martortags %}
 
 {% block title %}List of all Articles but Categorized{% endblock title %}
 
@@ -18,7 +17,7 @@
         <div class="card-body">
           <h3 class="card-title font-weight-bold">{{categorized_article.title}}</h3>
           <p class="card-text">
-            {{categorized_article.content|safe_markdown|slice:":150"}}
+            {{categorized_article.content|slice:":200"|safe}}
           </p>
           <p class="card-text">
             <small class="text-dark">Posted at {{ categorized_article.created_at|date:"d.F.Y" }}</small>

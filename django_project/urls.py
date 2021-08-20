@@ -1,4 +1,4 @@
-from core.sitemaps import ArticleViewSitemap,TaskViewSitemap,StaticViewSitemap,TicketViewSitemap
+from core.sitemaps import ArticleViewSitemap #,TaskViewSitemap,StaticViewSitemap,TicketViewSitemap
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
@@ -10,9 +10,9 @@ from core.views import handler404,handler500
 
 sitemaps = {
     "Articles": ArticleViewSitemap,
-    "Tasks": TaskViewSitemap,
-    "Tickets": TicketViewSitemap,
-    "Static": StaticViewSitemap
+    # "Tasks": TaskViewSitemap,
+    # "Tickets": TicketViewSitemap,
+    # "Static": StaticViewSitemap
 }
 
 urlpatterns = [
@@ -23,10 +23,10 @@ urlpatterns = [
     path('email/', include(email_urls)),
     path('', include('core.urls')),
     path('__debug__/', include(debug_toolbar.urls)),
-    path('martor/', include('martor.urls')),
     path('comments/', include('django_comments_xtd.urls')),
     path('support/', include('support.urls')),
     path('tellme/', include("tellme.urls")),
+    path('tinymce/', include('tinymce.urls')),
     path('sitemap.xml',sitemap,{'sitemaps':sitemaps},name="sitemap"),
 ]
 

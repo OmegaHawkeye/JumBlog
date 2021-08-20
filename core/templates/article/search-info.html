@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% load martortags %}
 
 {% block title %}Search Results{% endblock title %}
 
@@ -17,7 +16,7 @@
           <div class="card-body">
             <h3 class="card-title font-weight-bold">{{result.title}}</h3>
             <p class="card-text">
-              {{result.content|slice:":150"|safe_markdown}}
+              {{result.content|slice:":150"|safe}}
             </p>
             <p class="card-text">
               <small class="text-dark">Posted at {{ result.created_at|date:"d.F.Y" }}</small>

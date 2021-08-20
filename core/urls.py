@@ -5,6 +5,8 @@ urlpatterns = [
     path("",landing,name="landing"),
     path("home/",home,name="home"),
     path("search/", SearchResultView.as_view(), name="search"),
+    path("features/<str:feature>/",Features.as_view(),name="features"),
+    path("shop/",Shop.as_view(),name="shop"),
 
     path("articles/bookmarked",BookmarkedArticleListView.as_view(),name="bookmarked-article-list"),
     path("articles/categorized/<str:category>/",CategoryListView.as_view(),name="categorized-article-list"),

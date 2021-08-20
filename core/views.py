@@ -1,3 +1,4 @@
+from django.views.generic.base import View
 from support.forms import NewsletterForm
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -17,7 +18,9 @@ from .models import Article, Task
 from django.db.models import Q
 from bootstrap_datepicker_plus import DateTimePickerInput
 from django.utils.safestring import mark_safe
-import random
+from users.models import Role,Feature
+from hitcount.views import HitCountDetailView
+from friendship.models import Follow,Friend,Block
 
 def handler404(request,exception):
     return render(request, 'error/404.html', {"exception":exception,"request":request}, status=404)
@@ -64,13 +67,11 @@ def landing(request):
 
 @login_required
 def home(request):
-    # first_article_id = Article.objects.first().id
-    # last_article_id = Article.objects.last().id
-    # random_Article_id = random.randrange(first_article_id,last_article_id)
-    # random_Article = Article.objects.get(id=random_Article_id)
-    first = Article.objects.filter(published=True).first()
-    last = Article.objects.filter(published=True).last()
-    triple = Article.objects.filter(published=True)[1:4]
+    following = Follow.objects.following(request.user)
+    for follower in following:
+        first = Article.objects.filter(author__username__icontains=follower,published=True).first()
+        last = Article.objects.filter(author__username__icontains=follower,published=True).last()
+        triple = Article.objects.filter(author__username__icontains=follower,published=True)[1:4]
 
     if(not request.user.first_name or not request.user.last_name):
        messages.info(request, mark_safe("Please complete your <a href='/accounts/profile'>Profile</a>! "))
@@ -82,6 +83,7 @@ class BookmarkedArticleListView(LoginRequiredMixin,ListView):
     template_name = 'article/bookmarked_article_list.html'
     context_object_name = 'bookmarked_articles'
     ordering = ['-created_at']
+    paginate_by = 10
 
     def get_queryset(self):
         return Article.objects.filter(bookmarked=True)
@@ -91,7 +93,7 @@ class CategoryListView(LoginRequiredMixin,ListView):
     template_name = 'article/categorized_article_list.html'
     context_object_name = 'categorized_articles'
     ordering = ['-created_at']
-    paginate_by = 20
+    paginate_by = 10
 
     def get_queryset(self):
         return Article.objects.filter(category=self.kwargs.get("category"))
@@ -101,7 +103,7 @@ class DraftedArticleListView(LoginRequiredMixin,ListView):
     template_name = 'article/drafted_article_list.html'
     context_object_name = 'articles'
     ordering = ['-created_at']
-    paginate_by = 20
+    paginate_by = 10
 
     def get_queryset(self):
         return Article.objects.filter(author=self.request.user,published=False)
@@ -111,7 +113,7 @@ class PublishedArticleListView(LoginRequiredMixin,ListView):
     template_name = 'article/published_article_list.html'
     context_object_name = 'articles'
     ordering = ['-created_at']
-    paginate_by = 20
+    paginate_by = 10
 
     def get_queryset(self):
         return Article.objects.filter(author__username=self.kwargs.get("username"),published=True)
@@ -121,7 +123,7 @@ class UserArticleListView(LoginRequiredMixin,ListView):
     template_name = 'article/user_article_list.html'
     context_object_name = 'articles'
     ordering = ['-created_at']
-    paginate_by = 20
+    paginate_by = 10
 
     def get_queryset(self):
         return Article.objects.filter(author=self.request.user)
@@ -131,10 +133,13 @@ class ArticleListView(LoginRequiredMixin,ListView):
     template_name = 'article/article_list.html'
     context_object_name = 'articles'
     ordering = ['-created_at']
-    paginate_by = 20
+    paginate_by = 10
 
     def get_queryset(self):
-        return Article.objects.filter(published=True)
+        user_following = Follow.objects.following(self.request.user)
+        for follower in user_following:
+            articles = Article.objects.filter(author__username__icontains=follower,published=True)
+        return articles
 
 class ArticleCreateView(LoginRequiredMixin, CreateView):
     model = Article
@@ -144,13 +149,16 @@ class ArticleCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.author = self.request.user
+        self.request.user.xp = self.request.user.xp + 5
+        self.request.user.save()
         return super().form_valid(form)
 
-class ArticleDetailView(LoginRequiredMixin,DetailView):
+class ArticleDetailView(LoginRequiredMixin,HitCountDetailView):
     model = Article
     template_name = "article/article_detail.html"
     context_object_name = "article"
     fields = ['image_thumbnail','title','subtitle','content','tags','category','published','allow_comments']
+    count_hit = True
 
     def get_context_data(self, *args,**kwargs):
         context = super(ArticleDetailView,self).get_context_data(**kwargs)
@@ -277,3 +285,23 @@ class SearchResultView(ListView):
         ).distinct()
         return object_list
 
+class Shop(LoginRequiredMixin,ListView):
+    model = Feature
+    template_name = "core/shop.html"
+    context_object_name = "features"
+
+class Features(LoginRequiredMixin,View):
+    def post(self,request,feature):
+        features = Feature.objects.all()
+        for featur in features:
+            if featur.name == feature:
+                if self.request.user.xp >= featur.price:
+                    self.request.user.xp = self.request.user.xp - featur.price
+                    self.request.user.features.add(featur)
+                    self.request.user.save()
+                    messages.success(self.request,f'Congrats, you bought {featur.name}!!')
+                else:
+                    messages.info(request,"Sry u got not enough XP.")
+            else:
+                messages.info(request,"Invalid Feature Input")
+        return HttpResponseRedirect(reverse("shop"))

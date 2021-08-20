@@ -1,9 +1,8 @@
 {% extends "base.html" %}
-{% load martortags %}
 {% load crispy_forms_tags %}
 {% load comments %}
 {% load comments_xtd %}
-{% load martortags %}
+{% load hitcount_tags %}
 
 {% block title %} Detail Page of an Article{% endblock title %}
 
@@ -20,23 +19,25 @@
     <h1 class="fw-bold">{{ article.title }}</h1>
     <div class="span">
         <h6 class="text-secondary">Posted on {{ article.created_at|date:"d.F.Y" }} by {{article.author}}</h6>
+        <h6 class="text-muted"> Total Views: {% get_hit_count for article %}</h6>
     </div>
-    {% if article.author != user %}
+    {% if article.author == user %}
       <div class="d-flex flex-row justify-content-center">
         <form action="{% url 'like-article' article.id %}" method="POST">
             {% csrf_token %}
             {% if liked %}
-                <button type="submit" class="btn btn-link text-danger p-0 mx-3 "><i class="bi bi-heart-fill"></i></button>
+              {% comment %} {% endcomment %}
+                <button type="submit" class="btn btn-sm btn-danger my-3 mx-3"><i class="bi bi-heart-fill"></i></button>
             {% else %}
-                <button type="submit" class="btn btn-link text-danger p-0 mx-3 "><i class="bi bi-heart"></i></button>
+                <button type="submit" class="btn btn-danger btn-sm my-3 mx-3"><i class="bi bi-heart"></i></button>
             {% endif %}
         </form>
         <form action="{% url 'bookmark-article' article.id %}" method="POST">
             {% csrf_token %}
             {% if bookmarked %}
-                <button type="submit" class="btn btn-link text-dark p-0 mx-3"><i class="bi bi-bookmark-fill"></i></button>
+                <button type="submit" class="btn btn-sm btn-secondary my-3"><i class="bi bi-bookmark-fill"></i></button>
             {% else %}
-                <button type="submit" class="btn btn-link text-dark p-0 mx-3"><i class="bi bi-bookmark"></i></button>
+                <button type="submit" class="btn btn-sm btn-secondary my-3"><i class="bi bi-bookmark"></i></button>
             {% endif %}
         </form>
       </div>
@@ -47,7 +48,7 @@
         <a class="btn btn-danger btn-sm my-3" href="{% url 'article-delete' article.id %}"><i class="bi bi-trash"></i></a>
     {% endif %}
       <hr>
-      <p>{{ article.content|safe_markdown }}</p>
+      <p>{{ article.content|safe }}</p>
       <hr>
   </div>
     <div class="container my-3">

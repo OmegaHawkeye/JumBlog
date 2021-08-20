@@ -17,7 +17,7 @@ MANAGERS = ADMINS
 if DEBUG:
     ALLOWED_HOSTS = ['*']
 else:
-    ALLOWED_HOSTS = ['jumblog.herokuapp.com','jumblog-dev.herokuapp.com','jumblog-production.herokuapp.com']
+    ALLOWED_HOSTS = ['127.0.0.1','jumblog.herokuapp.com','jumblog-dev.herokuapp.com','jumblog-production.herokuapp.com']
     
 INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
@@ -36,7 +36,6 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'django_email_verification',
     'debug_toolbar',
-    'martor',
     'taggit',
     'django_comments_xtd',
     'django_comments',
@@ -46,6 +45,9 @@ INSTALLED_APPS = [
     'django_extensions',
     'tellme',
     'friendship',
+    'tinymce', 
+    # 'gTTS',
+    'hitcount'
 ]
 
 if DEBUG:

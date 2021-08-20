@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container-fluid px-4 px-lg-5 mt-5">
+    <div class="row gx-4 px-lg-5 mt-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+        {% for feature in features %}
+            <div class="col mb-5">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title text-muted text-uppercase text-center">{{ feature.name }}</h5>
+                        <div class="card-footer mt-4 border-top-0 bg-transparent">
+                            <div class="text-center">
+                                {% if feature in request.user.features.all %}
+                                    <a href="#" class="btn btn-block btn-primary disabled text-uppercase">Already Owned</a>
+                                {% else %}
+                                    <form action="{% url 'features' feature.name %}" method="post">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-block btn-success text-uppercase">Get for {{ feature.price }} XP </a>
+                                    </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock content %}

@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% load martortags %}
 
 {% block title %}List all drafted Articles from U{% endblock title %}
 
@@ -21,7 +20,7 @@
             <h6 class="card-subtitle mb-3">{{article.subtitle}}</h6>
           {% endif %}
           <p class="card-text">
-            {{article.content|safe_markdown|slice:":150"}}
+            {{article.content|slice:":200"|safe}}
           </p>
           {% for tag in article.tags.all %}
             <span class="badge badge-pill badge-primary">{{tag}}</span>

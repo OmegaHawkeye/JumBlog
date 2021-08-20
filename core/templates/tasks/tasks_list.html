@@ -10,17 +10,15 @@
 
 {% block content %}
 
-<!-- <section class="vh-100"> -->
   <div class="container py-5">
     <div class="row d-flex justify-content-center align-items-center">
       <div class="col">
         <p class="h1 text-center text-primary">
-              <i class="fas fa-check-square me-1"></i>
-              <u>My Todo-s</u>
-          </p>
+            <u>My Todos</u>
+        </p>
+        {% for task in tasks %}
         <div class="card bg-steel">
           <div class="card-body py-4 px-4 px-md-5">
-            {% for task in tasks %}
             <ul class="list-group list-group-horizontal rounded-0 bg-transparent">
               <li class="list-group-item d-flex align-items-center ps-0 pe-3 py-1 rounded-0 border-0 bg-transparent">
                 <div class="form-check"> 
@@ -37,7 +35,7 @@
               <li class="list-group-item px-3 py-1 d-flex align-items-center border-0 bg-transparent">
                 <div class="py-2 px-3 me-2 border border-warning rounded-3 d-flex align-items-center bg-light">
                   <p class="small mb-0">
-                    <a href="#" data-mdb-toggle="tooltip" title="Due on date">
+                    <a href="#" data-mdb-toggle="tooltip" title="Due date">
                       <i class="bi bi-hourglass-split me-2 text-warning"></i>
                     </a>
                     {{task.end|date:"d.F.Y"}}
@@ -56,37 +54,18 @@
                 </div>
               </li>
             </ul>
+            {% empty %}
+              <h1 class="text-center text-uppercase fw-bold">
+                Currently no Tasks!
+              </h1>
             {% endfor %}
           </div>
         </div>
+        <a class="btn btn-more float-end text-light mt-5" href="{% url 'task-create' %}"><i class="bi bi-plus-square"></i> Create task</a> 
       </div>
     </div>
   </div>
-<!-- </section> -->
 
-{% comment %} 
-<div class="container">
-{% for task in tasks %}
-  <div class="card mb-3 shadow-sm">
-    <div class="row">
-      <div class="col-md-8 align-self-center">
-        <div class="card-body">
-          <h3 class="card-title fw-bold mb-3">{{task.title}}</h3>
-          <p class="card-text mt-3">
-            <small class="text-dark">{{task.getStatus}}</small>
-          </p>
-           <p class="card-text mt-3">
-            <small class="text-muted">Posted at {{ task.created_at|date:"d.F.Y" }}</small>
-          </p>  
-          <a href="{{ task.get_absolute_url }}" class="btn btn-link float-end text-dark nav-link fw-bold">Read more</a>
-        </div>
-      </div>
-    </div>
-  </div>
-{% endfor %}
-<a class="btn btn-more float-end text-light mb-5" href="{% url 'task-create' %}"><i class="bi bi-plus-square"></i> Create task</a> 
-</div>
-{% endcomment %}
 {% if is_paginated %}
   <div class="container">
     {% if page_obj.has_previous %}

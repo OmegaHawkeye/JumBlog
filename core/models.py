@@ -1,14 +1,13 @@
 from django.urls import reverse
 from django.db import models
-# from django.contrib.auth.models import User
 from imagekit.models.fields import ProcessedImageField
 from taggit.managers import TaggableManager
 from django_comments.moderation import CommentModerator
 from django_comments_xtd.moderation import moderator
-from martor.models import MartorField
 from imagekit.processors import ResizeToFill
 import datetime
 from django_project.settings import AUTH_USER_MODEL
+from tinymce.models import HTMLField
 
 CATEGORY_CHOICES = (
     ('WebDevelopment','Web Development'),
@@ -23,7 +22,8 @@ class Article(models.Model):
     title = models.CharField(max_length=100,unique=True)
     subtitle = models.CharField(max_length=100,null=True,blank=True)
     author = models.ForeignKey(AUTH_USER_MODEL,on_delete=models.CASCADE)
-    content = MartorField()
+    # content = MartorField()
+    content = HTMLField()
     image_thumbnail = ProcessedImageField(blank=True,upload_to="article_pics/",processors=[ResizeToFill(400,400)],format='JPEG', options={'quality': 80})
     category = models.CharField(max_length=155,choices=CATEGORY_CHOICES,null=True,blank=True)
     tags = TaggableManager()
