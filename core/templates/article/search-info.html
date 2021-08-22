@@ -19,7 +19,8 @@
               {{result.content|slice:":150"|safe}}
             </p>
             <p class="card-text">
-              <small class="text-dark">Posted at {{ result.created_at|date:"d.F.Y" }}</small>
+              <small class="text-dark">Posted at {{ result.created_at|timesince }}</small>
+              <!-- <small class="text-dark">Posted at {{ result.created_at|date:"d.F.Y" }}</small> -->
             </p>
             {% for tag in result.tags.all %}
               <span class="badge badge-pill badge-primary">{{tag}}</span>

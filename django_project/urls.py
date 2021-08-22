@@ -16,6 +16,8 @@ sitemaps = {
 }
 
 urlpatterns = [
+    path('jet/', include('jet.urls')),
+    path('jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),
     path('secret/', admin.site.urls),
     path('admin/',include('admin_honeypot.urls',namespace='admin_honeypot')),
     path("accounts/", include('users.urls')),

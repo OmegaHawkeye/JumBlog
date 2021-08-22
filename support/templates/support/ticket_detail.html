@@ -1,9 +1,7 @@
 {% extends "base.html" %}
-{% load martortags %}
 {% load crispy_forms_tags %}
 {% load comments %}
 {% load comments_xtd %}
-{% load martortags %}
 
 {% block title %} Detail Page of an Ticket{% endblock title %}
 
@@ -13,31 +11,33 @@
 
 {% block content %}
 
-<div class="container my-4">
-    <h1 class="font-weight-bold">{{ ticket.title }}</h1>
+<div class="container my-4 text-center">
+    <h1 class="font-weight-bold h1">{{ ticket.title }}</h1>
     <div class="span">
-        <h6 class="font-weight-bold">Written by {{ticket.creator}}</h6>
+        <h6 class="font-weight-bold h5">Written by {{ticket.creator}}</h6>
         <p class="text-secondary ">{{ ticket.created_at|date:"d.F.Y" }}</p>
-        {% if request.user.is_superuser %}
+        {% if request.user.is_supporter %}
             <a class="btn btn-secondary btn-sm mr-2" href="{% url 'ticket-update' ticket.id %}">Edit</a>
-            <a class="btn btn-danger btn-sm" href="{% url 'ticket-delete' ticket.id %}">Delete</i></a>
+            <!-- <a class="btn btn-danger btn-sm" href="{% url 'ticket-delete' ticket.id %}">Delete</i></a> -->
         {% endif %}
     </div>
     <hr>
-    <p>{{ ticket.content }}</p>
+    <p>{{ ticket.content|safe }}</p>
 
     {% get_comment_count for ticket as comment_count %}
 
     {% if comment_count %}
         <ul class="media-list">
-        {% render_xtdcomment_tree for ticket %}
-    </ul>
+            {% render_xtdcomment_tree for ticket %}
+        </ul>
     {% endif %}
 
     <div class="card card-block">
         <div class="card-body">
-            <h4 class="card-title text-center pb-3">Post your comment</h4>
-            {% render_comment_form for ticket %}
+            <h4 class="card-title p-3">Post your comment</h4>
+            <div class="text-start">
+                {% render_comment_form for ticket %}
+            </div>
         </div>
     </div> 
 

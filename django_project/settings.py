@@ -17,9 +17,12 @@ MANAGERS = ADMINS
 if DEBUG:
     ALLOWED_HOSTS = ['*']
 else:
-    ALLOWED_HOSTS = ['127.0.0.1','jumblog.herokuapp.com','jumblog-dev.herokuapp.com','jumblog-production.herokuapp.com']
+    # ALLOWED_HOSTS = ['127.0.0.1','jumblog.herokuapp.com','jumblog-dev.herokuapp.com','jumblog-production.herokuapp.com']
+    ALLOWED_HOSTS = ["*"]
     
 INSTALLED_APPS = [
+    'jet.dashboard',
+    'jet',
     'whitenoise.runserver_nostatic',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -47,7 +50,9 @@ INSTALLED_APPS = [
     'friendship',
     'tinymce', 
     # 'gTTS',
-    'hitcount'
+    'hitcount',
+    'django_countries',
+    'django_social_share', 
 ]
 
 if DEBUG:

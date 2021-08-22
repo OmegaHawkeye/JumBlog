@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.http import request
 from django.views.generic.edit import FormView
 from support.forms import ContactUsForm,NewsletterForm
 from .mixins import SupportRequiredMixin
@@ -64,7 +65,7 @@ class SupporterTicketListView(SupportRequiredMixin,LoginRequiredMixin,ListView):
     paginate_by = 20
 
     def get_queryset(self):
-        return Ticket.objects.filter(supporter__user=self.request.user or None)
+        return Ticket.objects.filter(status=True,supporter__username=None or self.request.user.username)
 
 class TicketCreateView(LoginRequiredMixin, CreateView):
     model = Ticket
@@ -73,7 +74,8 @@ class TicketCreateView(LoginRequiredMixin, CreateView):
     success_url = "/support/tickets/"
 
     def form_valid(self, form):
-        form.instance.creator = self.request.user
+        if not self.request.user.is_supporter:
+            form.instance.creator = self.request.user
         return super().form_valid(form)
 
 class TicketDetailView(LoginRequiredMixin,DetailView):
@@ -94,7 +96,7 @@ class TicketUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return super().form_valid(form)
 
     def test_func(self):
-        if self.request.user.is_superuser:
+        if self.request.user.is_supporter:
             return True
         return False
 

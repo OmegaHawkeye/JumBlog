@@ -27,7 +27,11 @@
             <a class="link second-text-color d-block" href="{% url 'task-list' %}">To Do List | Reminder</a>
               <a class="link second-text-color d-block" href="#" style="margin-top: 10px">Text To Speech</a>
               <a class="link second-text-color d-block" href="#" style="margin-top: 10px">Live Chat</a>
-              <a class="link second-text-color d-block" href="{% url 'ticket-list' %}" style="margin-top: 10px">Unlimited Support</a>
+              {% if request.user.is_supporter or request.user.is_superuser or request.user.is_staff %}
+                <a class="link second-text-color d-block" href="{% url 'supporter-ticket-list' %}" style="margin-top: 10px">Unlimited Support</a>
+              {% else %}
+                <a class="link second-text-color d-block" href="{% url 'ticket-list' %}" style="margin-top: 10px">Unlimited Support</a>
+              {% endif %}
             </div>
         </div>
         <div class="col-lg-3 col-md-6">

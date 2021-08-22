@@ -19,9 +19,10 @@
     <h1 class="fw-bold">{{ article.title }}</h1>
     <div class="span">
         <h6 class="text-secondary">Posted on {{ article.created_at|date:"d.F.Y" }} by {{article.author}}</h6>
+        <!-- <h6 class="text-secondary">Posted on {{ article.created_at|timesince }} by {{article.author}}</h6> -->
         <h6 class="text-muted"> Total Views: {% get_hit_count for article %}</h6>
     </div>
-    {% if article.author == user %}
+    {% if article.author != user %}
       <div class="d-flex flex-row justify-content-center">
         <form action="{% url 'like-article' article.id %}" method="POST">
             {% csrf_token %}

@@ -29,7 +29,8 @@
             <small class="text-dark">Category: {{article.category}}</small>
           </p>
            <p class="card-text mt-3">
-            <small class="text-muted">Posted at {{ article.created_at|date:"d.F.Y" }}</small>
+            <small class="text-muted">Posted at {{ article.created_at|timesince }}</small>
+            <!-- <small class="text-muted">Posted at {{ article.created_at|date:"d.F.Y" }}</small> -->
           </p>  
           <a href="{{ article.get_absolute_url }}" class="btn btn-link float-end text-dark nav-link fw-bold">Read more</a>
         </div>

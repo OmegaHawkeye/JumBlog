@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, Group
+from django_countries.fields import CountryField
 
 # class Badge(models.Model):
 #     image = models.ImageField(upload_to="badge_pics/")
@@ -28,3 +29,4 @@ class CustomUser(AbstractUser):
     xp = models.PositiveBigIntegerField(default=0)
     role = models.ForeignKey(Role,on_delete=models.CASCADE,null=True,blank=True)
     features = models.ManyToManyField(Feature,related_name="users_features",blank=True)
+    country = CountryField(blank_label='(select country)',null=True,blank=True)

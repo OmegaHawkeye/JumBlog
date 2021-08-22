@@ -1,12 +1,12 @@
 from django.db import models
 from django.urls import reverse
 from django.db import models
-from martor.models import MartorField
+from tinymce.models import HTMLField
 from django_project.settings import AUTH_USER_MODEL
 
 class Ticket(models.Model):
     title = models.CharField(max_length=255)
-    content = MartorField()
+    content = HTMLField()
     creator = models.ForeignKey(AUTH_USER_MODEL,on_delete=models.CASCADE)
     supporter = models.ForeignKey(AUTH_USER_MODEL,on_delete=models.CASCADE,related_name="ticket_supporter",blank=True,null=True)
     status = models.BooleanField(default=True)
@@ -29,7 +29,7 @@ class Ticket(models.Model):
 class ContactUs(models.Model):
     email = models.EmailField()
     title = models.CharField(max_length=255)
-    content = MartorField()
+    content = HTMLField()
 
     class Meta: 
         verbose_name_plural = "Contact Us"

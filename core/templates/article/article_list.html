@@ -31,9 +31,11 @@
           </p>
            <p class="card-text mt-3">
             {% if request.user == article.author %}
-              <small class="text-muted">Posted at {{ article.created_at|date:"d.F.Y H:i" }} from <a href="{% url 'user-articles-list' %}">{{article.author}}</a></small>
+              <!-- <small class="text-muted">Posted at {{ article.created_at|date:"d.F.Y H:i" }} from <a href="{% url 'user-articles-list' %}">{{article.author}}</a></small> -->
+              <small class="text-muted">Posted at {{ article.created_at|timesince }} from <a href="{% url 'user-articles-list' %}">{{article.author}}</a></small>
             {% else %}
-              <small class="text-muted">Posted at {{ article.created_at|date:"d.F.Y H:i" }} from <a href="{% url 'user-published-articles-list' username=article.author %}">{{article.author}}</a></small>
+              <!-- <small class="text-muted">Posted at {{ article.created_at|date:"d.F.Y H:i" }} from <a href="{% url 'user-published-articles-list' username=article.author %}">{{article.author}}</a></small> -->
+              <small class="text-muted">Posted at {{ article.created_at|timesince}} from <a href="{% url 'user-published-articles-list' username=article.author %}">{{article.author}}</a></small>
             {% endif %}
           </p>
           <a href="{{ article.get_absolute_url }}" class="btn btn-link float-end text-dark nav-link fw-bold">Read more</a>
