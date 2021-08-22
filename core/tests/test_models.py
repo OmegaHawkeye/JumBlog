@@ -34,7 +34,7 @@ class Test_Task(TestCase):
     def setUp(self):
         self.user = CustomUser.objects.create(username="Omega",password="RexiSammy2003")
         self.task = Task.objects.create(name="Test1",creator=self.user,start=datetime.datetime.now(),end=datetime.datetime(2021, 8, 4, 15, 24))
-        self.task1 = Task.objects.create(name="Test2",creator=self.user,start=datetime.datetime(2021, 6, 3, 15, 24),end=datetime.datetime(2021, 6, 4, 15, 24))
+        self.task1 = Task.objects.create(name="Test2",creator=self.user,start=datetime.datetime.now(),end=(datetime.datetime.now() + datetime.timedelta(days=5)))
         self.task2 = Task.objects.create(name="Test3",creator=self.user,start=datetime.datetime.now(),end=datetime.datetime.now(),completed=True)
 
     def test_model(self):

@@ -5,7 +5,7 @@ from taggit.managers import TaggableManager
 from django_comments.moderation import CommentModerator
 from django_comments_xtd.moderation import moderator
 from imagekit.processors import ResizeToFill
-import datetime
+from datetime import datetime,timedelta
 from django_project.settings import AUTH_USER_MODEL
 from tinymce.models import HTMLField
 
@@ -21,7 +21,7 @@ CATEGORY_CHOICES = (
 class Article(models.Model):
     title = models.CharField(max_length=100,unique=True)
     subtitle = models.CharField(max_length=100,null=True,blank=True)
-    author = models.ForeignKey(AUTH_USER_MODEL,on_delete=models.CASCADE)
+    author = models.ForeignKey(AUTH_USER_MODEL,on_delete=models.CASCADE,null=True,blank=True)
     # content = MartorField()
     content = HTMLField()
     image_thumbnail = ProcessedImageField(blank=True,upload_to="article_pics/",processors=[ResizeToFill(400,400)],format='JPEG', options={'quality': 80})
@@ -78,12 +78,20 @@ class Task(models.Model):
     def get_deletion_url(self):
         return reverse('task-delete', kwargs={'pk': self.pk})
 
+    # @property
+    # def getStatus(self):
+    #     if self.completed == False and ((self.end - datetime.datetime.now()) > datetime.timedelta(seconds=1)):
+    #         return "Uncompleted"
+    #     elif self.completed == False and (self.end - datetime.datetime.now()) < datetime.timedelta(seconds=1):
+    #         return "Outdated"
+    #     else:
+    #         return "Completed"
+
     @property
     def getStatus(self):
-        if self.completed == False and ((self.end - datetime.datetime.now()) > datetime.timedelta(seconds=1)):
+        if self.completed == False and (datetime.now() + timedelta(seconds=1) > self.end):
             return "Uncompleted"
-        elif self.completed == False and (self.end - datetime.datetime.now()) < datetime.timedelta(seconds=1):
+        elif self.completed == False and (datetime.now() + timedelta(seconds=1) < self.end):
             return "Outdated"
         else:
             return "Completed"
-
