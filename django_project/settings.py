@@ -210,40 +210,11 @@ else:
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-MARTOR_THEME = 'bootstrap'
-
-MARTOR_ENABLE_CONFIGS = {
-    'emoji': 'false',        # to enable/disable emoji icons.
-    'imgur': 'true',        # to enable/disable imgur/custom uploader.
-    'mention': 'false',     # to enable/disable mention
-    'jquery': 'true',       # to include/revoke jquery (require for admin default django)
-    'living': 'true',      # to enable/disable live updates in preview
-    'spellcheck': 'true',  # to enable/disable spellcheck in form textareas
-    'hljs': 'true',         # to enable/disable hljs highlighting in preview
-}
-
-MARTOR_TOOLBAR_BUTTONS = [
-    'bold', 'italic', 'horizontal', 'heading', 'pre-code',
-    'blockquote', 'unordered-list', 'ordered-list',
-    'link', 'image-link','toggle-maximize', 'help'
-] #'image-upload','direct-mention','emoji',
-
-# MARTOR_ENABLE_LABEL = True
-
-MARTOR_MARKDOWN_BASE_MENTION_URL = 'http://jumblog.herokuapp.com/' 
-
-# MARTOR_ALTERNATIVE_JS_FILE_THEME = "js/bootstrap.bundle.min.js"
-MARTOR_ALTERNATIVE_CSS_FILE_THEME = "css/main2.css"
-
-# CSRF_COOKIE_HTTPONLY = False
-
 COMMENTS_APP = 'django_comments_xtd'
 COMMENTS_XTD_MAX_THREAD_LEVEL_BY_APP_MODEL = {
         'core.article': 4,
         'support.ticket':3
 }
-
-# COMMENTS_XTD_MAX_THREAD_LEVEL = 2
 
 COMMENTS_XTD_CONFIRM_EMAIL = True
 
@@ -255,7 +226,6 @@ COMMENTS_XTD_APP_MODEL_OPTIONS = {
         'who_can_post': 'users'  # Valid values: 'all', users'
     }
 }
-
 
 if not DEBUG:
     sentry_sdk.init(
