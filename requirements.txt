@@ -102,7 +102,6 @@ sqlparse==0.4.1
 swapper==1.1.2.post1
 toml==0.10.2
 Twisted==21.2.0
-twisted-iocpsupport==1.0.1
 txaio==21.2.1
 tzdata==2021.1
 tzlocal==3.0
