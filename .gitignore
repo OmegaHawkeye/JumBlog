@@ -4,6 +4,6 @@ __pycache__
 venv
 .env
 .coverage
-jumblog.dot
-jumblog.jpg
 .github/workflows/publish.yml
+django_project/dev_settings.py
+settings.ini

@@ -1,25 +1,21 @@
 import os
 from pathlib import Path
-#from decouple import config
+from decouple import config
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'm5zywpxsl+tu8$2d(u4_utr+v%)nvii94fc+hj2ixnfr4uwv0w'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
-DEBUG = True
+DEBUG = config('DEBUG',cast=bool,default=False)
 
 ADMINS = [('Julian Chornitzer','chornitzerj@gmail.com')]
 
 MANAGERS = ADMINS
 
-if DEBUG:
-    ALLOWED_HOSTS = ['*']
-else:
-    # ALLOWED_HOSTS = ['127.0.0.1','jumblog.herokuapp.com','jumblog-dev.herokuapp.com','jumblog-production.herokuapp.com']
-    ALLOWED_HOSTS = ["*"]
-    
+ALLOWED_HOSTS = ['127.0.0.1','jumblog.herokuapp.com','jumblog-dev.herokuapp.com','jumblog-production.herokuapp.com']
+        
 INSTALLED_APPS = [
     'jet.dashboard',
     'jet',
@@ -55,10 +51,7 @@ INSTALLED_APPS = [
     'django_social_share', 
 ]
 
-if DEBUG:
-    SITE_ID = 1
-else:
-    SITE_ID = 2
+SITE_ID = 2
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -94,22 +87,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'django_project.wsgi.application'
 
-if DEBUG:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
-else:
-    DATABASES = {
+
+DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME':   "d32c2lrrbe2a3g",
-        'USER':    "dkepjptgunkgri",
-        'PASSWORD': "825f4a274a36a5d574cd2a4b87893ee3eb431ecbe3ef7f7124b48a3d171198ea",
-        'HOST':  "ec2-34-254-69-72.eu-west-1.compute.amazonaws.com", 
-        'PORT': '5432'
+        'NAME':   config("DB_NAME"), 
+        'USER':    config("DB_NAME"), 
+        'PASSWORD': config("DB_NAME"), 
+        'HOST':  config("DB_NAME"),
+        'PORT': config("DB_NAME"),
         }   
     }      
 
@@ -163,50 +149,39 @@ EMAIL_MAIL_PLAIN = 'email_confirm/mail_body.txt'
 EMAIL_TOKEN_LIFE = 60 * 60
 EMAIL_PAGE_TEMPLATE = 'email_confirm/confirm_template.html'
 
-if DEBUG:
-    EMAIL_PAGE_DOMAIN = '127.0.0.1:8000'
-else:
-    EMAIL_PAGE_DOMAIN = 'https://jumblog.herokuapp.com'
+EMAIL_PAGE_DOMAIN = 'https://jumblog.herokuapp.com'
     
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
-EMAIL_HOST_USER = 'jumblogoffice@gmail.com'
+EMAIL_HOST_USER = config("EMAIL_HOST_USER")
 
-EMAIL_HOST_PASSWORD  = '%rJSjN#96xuF#y^pRv85*jNkF34m'
+EMAIL_HOST_PASSWORD  = config("EMAIL_HOST_PASSWORD")
 
-AWS_STORAGE_BUCKET_NAME = 'jumblog'
+AWS_STORAGE_BUCKET_NAME =config("AWS_STORAGE_BUCKET_NAME")
 
-AWS_SECRET_ACCESS_KEY = 'YFmO2/IcohZkd++DraMMqV4qy1uGGllZ/DzIouo9'
+AWS_SECRET_ACCESS_KEY =config("AWS_SECRET_ACCESS_KEY")
 
-AWS_ACCESS_KEY_ID = 'AKIAYBOUMUXQFXEAFISG'
+AWS_ACCESS_KEY_ID = config("AWS_ACCESS_KEY_ID")
 
-AWS_URL = 'https://jumblog.s3.amazonaws.com/'
+AWS_URL = config("AWS_URL")
 
-AWS_S3_REGION_NAME = 'eu-central-1'
+AWS_S3_REGION_NAME = config("AWS_S3_REGION_NAME")
 
-AWS_S3_SIGNATURE_VERSION = 's3v4'
+AWS_S3_SIGNATURE_VERSION = config("AWS_S3_SIGNATURE_VERSION")
 
 AWS_DEFAULT_ACL = None
 
-if DEBUG:
-    STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-    STATIC_URL = '/static/'
-    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-    MEDIA_URL = '/media/'
-else:       
-    STATIC_URL = '/static/'
-    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-    # STATIC_URL = AWS_URL + '/static/'
-    # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-    # STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-    MEDIA_URL = AWS_URL + '/media/'
-    DEFAULT_FILE_STORAGE = 'django_project.storage_backends.MediaStorage'
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# STATIC_URL = AWS_URL + '/static/'
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+MEDIA_URL = AWS_URL + '/media/'
+DEFAULT_FILE_STORAGE = 'django_project.storage_backends.MediaStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -223,19 +198,13 @@ COMMENTS_XTD_APP_MODEL_OPTIONS = {
         'allow_flagging': True,
         'allow_feedback': True,
         'show_feedback': True,
-        'who_can_post': 'users'  # Valid values: 'all', users'
+        'who_can_post': 'users'
     }
 }
 
-if not DEBUG:
-    sentry_sdk.init(
-        dsn="https://ce06e5a7f9724d19a0456894c7341117@o545053.ingest.sentry.io/5777662",
-        integrations=[DjangoIntegration()],
-        traces_sample_rate=0.5,
-        send_default_pii=True
+sentry_sdk.init(
+    dsn=config("SENTRY_DSN"),
+    integrations=[DjangoIntegration()],
+    traces_sample_rate=0.5,
+    send_default_pii=True
 )
-
-GRAPH_MODELS = {
-  'all_applications': True,
-  'group_models': True,
-}
