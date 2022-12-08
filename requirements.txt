@@ -101,7 +101,7 @@ SQLAlchemy==1.4.23
 sqlparse>=0.4.2
 swapper==1.1.2.post1
 toml==0.10.2
-Twisted==22.4.0
+Twisted==22.10.0
 txaio==21.2.1
 tzdata==2021.1
 tzlocal==3.0
