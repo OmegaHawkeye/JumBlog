@@ -16,7 +16,7 @@ chardet==4.0.0
 click==7.1.2
 constantly==15.1.0
 crispy-bootstrap5==0.3.1
-cryptography==3.4.7
+cryptography==41.0.0
 daphne==3.0.2
 dateparser==1.0.0
 defusedxml==0.7.1
